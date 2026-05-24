@@ -17,7 +17,6 @@ public class Hoster
 
     public static void HostDotNet(string entryPointDLL, string entryPointType, string entryPointFunction)
     {
-        string dotnetRoot    = Path.Combine(Application.persistentDataPath, "dotnet");
         string runtimeConfig = Path.Combine(dotnetRoot, "runtimeconfig.json");
         int result = Host(
             runtimeConfig,
@@ -29,10 +28,9 @@ public class Hoster
             throw new InvalidProgramException("Failed to Host DotNet!");
         }
     }
-
-    public static IEnumerator ExtractFolder(string ZipPath)
+    public static string dotnetRoot => Path.Combine(Application.persistentDataPath, "dotnet");
+    public static IEnumerator ExtractDotNet(string ZipPath)
     {
-        string dotnetRoot = Path.Combine(Application.persistentDataPath, ZipPath);
         if (Directory.Exists(dotnetRoot))
             yield break;
         
@@ -48,15 +46,15 @@ public class Hoster
         }
 
         // Write zip to temp location
-        string tempZip = Path.Combine(Application.temporaryCachePath, ZipPath);
+        string tempZip = Path.Combine(Application.temporaryCachePath, "dotnet.zip");
         File.WriteAllBytes(tempZip, req.downloadHandler.data);
 
         // Extract
-        ZipFile.ExtractToDirectory(tempZip, Path.Combine(Application.persistentDataPath, ZipPath));
+        ZipFile.ExtractToDirectory(tempZip, dotnetRoot);
 
         // Clean up temp zip
         File.Delete(tempZip);
     
-        Debug.Log($"{ZipPath} extracted");
+        Debug.Log("dotnet extracted");
     }
 }
