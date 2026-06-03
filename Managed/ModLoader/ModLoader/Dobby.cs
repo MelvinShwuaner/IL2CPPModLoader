@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-public static partial class Dobby
+public static unsafe partial class Dobby
 {
     [LibraryImport("dobby", EntryPoint = "DobbyHook")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

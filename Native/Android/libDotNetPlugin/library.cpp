@@ -26,81 +26,73 @@ namespace
 
     // Forward declarations
     bool load_hostfxr(const char_t *app);
-    load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly(const char_t *assembly);
+    load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly();
+    typedef void (CORECLR_DELEGATE_CALLTYPE* entry_point_fn)();
 }
-
+static bool Hosted = false;
+static std::string RuntimeConfigPath;
+static hostfxr_handle Context = nullptr;
+static std::string EntryPointPath = nullptr;
 extern "C"
 {
+    void Log(const char* message) {
+        LOG("%s", message);
+    }
     int Host(
-        const char* RuntimeConfigPath,
         const char* DotNetPath,
-        const char* EntryPointType,
-        const char* EntryPointFunction)
+        const char* EntryPointPath)
     {
+        if (Hosted) {
+            return EXIT_FAILURE;
+        }
         // Load hostfxr and get exports
         if (!load_hostfxr(DotNetPath))
         {
-            assert(false && "Failed to load hostfxr");
+            LOG("Failed to load hostfxr");
             return EXIT_FAILURE;
         }
-
-        hostfxr_handle cxt = nullptr;
-
+        RuntimeConfigPath = std::string(DotNetPath) + "/runtimeconfig.json";
         int rc = init_for_config_fptr(
-            RuntimeConfigPath,
+            RuntimeConfigPath.c_str(),
             nullptr,
-            &cxt);
+            &Context);
 
-        if (rc != 0 || cxt == nullptr)
+        if (rc != 0 || Context == nullptr)
         {
             LOG("hostfxr_initialize_for_runtime_config failed: 0x%x", rc);
             return EXIT_FAILURE;
         }
-        get_function_pointer_fn get_function_pointer = nullptr;
+        load_assembly_and_get_function_pointer_fn load_assembly_fn =
+           get_dotnet_load_assembly();
 
-        rc = get_delegate_fptr(
-            cxt,
-            hdt_get_function_pointer,
-            (void**)&get_function_pointer);
-
-        if (rc != 0 || get_function_pointer == nullptr)
+        if (load_assembly_fn == nullptr)
         {
-            std::cerr
-                << "hostfxr_get_runtime_delegate failed: "
-                << std::hex << std::showbase << rc
-                << std::endl;
-
+            LOG("Failed to get load_assembly delegate");
             return EXIT_FAILURE;
         }
-        // Signature of managed method:
-        //
-        // [UnmanagedCallersOnly]
-        // public static void Init()
-        //
-        typedef void (CORECLR_DELEGATE_CALLTYPE* entry_point_fn)();
+        ::EntryPointPath = std::string(EntryPointPath);
 
         entry_point_fn entrypoint = nullptr;
 
-        rc = get_function_pointer(
-            EntryPointType,
-            EntryPointFunction,
+        rc = load_assembly_fn(
+            EntryPointPath,
+            "",
+            "Init",
             UNMANAGEDCALLERSONLY_METHOD,
             nullptr,
-            nullptr,
-            (void**)&entrypoint);
-
-        if (rc != 0 || entrypoint == nullptr)
-        {
-            std::cerr
-                << "get_function_pointer failed: "
-                << std::hex << std::showbase << rc
-                << std::endl;
-
+            reinterpret_cast<void **>(&entrypoint)
+        );
+        if (rc != 0 || entrypoint == nullptr) {
             return EXIT_FAILURE;
         }
         entrypoint();
 
+        Hosted = true;
+
         return EXIT_SUCCESS;
+    }
+    int IsHosting() {
+        return Hosted;
     }
 }
 
@@ -156,28 +148,18 @@ namespace
 
     // <SnippetInitialize>
     // Load and initialize .NET Core and get desired function pointer for scenario
-    load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly(const char_t *config_path)
+    load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly()
     {
         // Load .NET Core
         void *load_assembly_and_get_function_pointer = nullptr;
-        hostfxr_handle cxt = nullptr;
-        int rc = init_for_config_fptr(config_path, nullptr, &cxt);
-        if (rc != 0 || cxt == nullptr)
-        {
-            std::cerr << "Init failed: " << std::hex << std::showbase << rc << std::endl;
-            close_fptr(cxt);
-            return nullptr;
-        }
-
         // Get the load assembly function pointer
-        rc = get_delegate_fptr(
-            cxt,
+        int rc = get_delegate_fptr(
+            Context,
             hdt_load_assembly_and_get_function_pointer,
             &load_assembly_and_get_function_pointer);
         if (rc != 0 || load_assembly_and_get_function_pointer == nullptr)
             std::cerr << "Get delegate failed: " << std::hex << std::showbase << rc << std::endl;
 
-        close_fptr(cxt);
         return (load_assembly_and_get_function_pointer_fn)load_assembly_and_get_function_pointer;
     }
     // </SnippetInitialize>

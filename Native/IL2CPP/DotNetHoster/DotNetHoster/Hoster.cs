@@ -1,60 +1,35 @@
-﻿using System.Collections;
-using System.IO.Compression;
-using System.Runtime.InteropServices;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using System.Runtime.InteropServices;
 
-namespace DotNetHoster;
-
-public class Hoster
+namespace DotNet
 {
-    [DllImport("DotNetPlugin")]
-    static extern int Host(
-        string runtimeConfigPath,
-        string dotNetPath,
-        string entryPointType,
-        string entryPointFunction);
+    public class Core
+    {
+        public static bool IsHosting => IsHostingInternal() == 1;
 
-    public static void HostDotNet(string entryPointDLL, string entryPointType, string entryPointFunction)
-    {
-        string runtimeConfig = Path.Combine(dotnetRoot, "runtimeconfig.json");
-        int result = Host(
-            runtimeConfig,
-            dotnetRoot,
-            $"{entryPointType}, {entryPointDLL}",
-            entryPointFunction);
-        if (result != 0)
-        {
-            throw new InvalidProgramException("Failed to Host DotNet!");
-        }
-    }
-    public static string dotnetRoot => Path.Combine(Application.persistentDataPath, "dotnet");
-    public static IEnumerator ExtractDotNet(string ZipPath)
-    {
-        if (Directory.Exists(dotnetRoot))
-            yield break;
+        [DllImport("DotNetPlugin", EntryPoint="IsHosting")]
+        static extern int IsHostingInternal();
+        [DllImport("DotNetPlugin")]
+        static extern int Host(
+            string runtimeConfigPath,
+            string dotNetPath,
+            string EntryPointPath);
         
-        string zipUrl = Path.Combine(Application.streamingAssetsPath, ZipPath);
-    
-        using var req = UnityWebRequest.Get(zipUrl);
-        yield return req.SendWebRequest();
-
-        if (req.result != UnityWebRequest.Result.Success)
+        public static void HostDotNet(string EntryPointPath)
         {
-            Debug.LogError($"Failed to read {ZipPath}: {req.error}");
-            yield break;
+            string runtimeConfig = Path.Combine(dotnetRoot, "runtimeconfig.json");
+            int result = Host(
+                runtimeConfig,
+                dotnetRoot,
+                EntryPointPath);
+            if (result != 0)
+            {
+                throw new InvalidOperationException("Failed to Host DotNet!");
+            }
         }
-
-        // Write zip to temp location
-        string tempZip = Path.Combine(Application.temporaryCachePath, "dotnet.zip");
-        File.WriteAllBytes(tempZip, req.downloadHandler.data);
-
-        // Extract
-        ZipFile.ExtractToDirectory(tempZip, dotnetRoot);
-
-        // Clean up temp zip
-        File.Delete(tempZip);
-    
-        Debug.Log("dotnet extracted");
+        public static string dotnetRoot => Path.Combine(Utilities.InternalFilesDir, "dotnet");
+        public static void PrepareDotNet(string ZipPath)
+        {
+            Utilities.ExtractFromStreamingAssets(ZipPath, dotnetRoot);
+        }
     }
 }

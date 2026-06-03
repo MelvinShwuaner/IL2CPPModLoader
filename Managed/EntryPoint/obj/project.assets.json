@@ -1,30 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net10.0": {
-      "ModLoader/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "compile": {
-          "bin/placeholder/ModLoader.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/ModLoader.dll": {}
-        }
-      }
-    }
+    "net10.0": {}
   },
-  "libraries": {
-    "ModLoader/1.0.0": {
-      "type": "project",
-      "path": "../ModLoader/ModLoader.csproj",
-      "msbuildProject": "../ModLoader/ModLoader.csproj"
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    "net10.0": [
-      "ModLoader >= 1.0.0"
-    ]
+    "net10.0": []
   },
   "packageFolders": {
     "/Users/hamza/.nuget/packages/": {}
@@ -51,11 +32,7 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
-          "projectReferences": {
-            "/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/ModLoader.csproj": {
-              "projectPath": "/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/ModLoader.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {

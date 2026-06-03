@@ -5,25 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>EntryPoint</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-
-    <ItemGroup>
-      <Reference Include="Il2CppInterop.Common">
-        <HintPath>..\Dependencies\Il2CppInterop.Common.dll</HintPath>
-      </Reference>
-      <Reference Include="Il2CppInterop.HarmonySupport">
-        <HintPath>..\Dependencies\Il2CppInterop.HarmonySupport.dll</HintPath>
-      </Reference>
-      <Reference Include="Il2CppInterop.Runtime">
-        <HintPath>..\Dependencies\Il2CppInterop.Runtime.dll</HintPath>
-      </Reference>
-      <Reference Include="Il2CppInterop.StructGenerator">
-        <HintPath>..\Dependencies\Il2CppInterop.StructGenerator.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\ModLoader\ModLoader.csproj" />
-    </ItemGroup>
 
 </Project>

@@ -1,0 +1,12 @@
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/obj/Debug/net10.0/ModLoader.GeneratedMSBuildEditorConfig.editorconfig
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/obj/Debug/net10.0/ModLoader.AssemblyInfoInputs.cache
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/obj/Debug/net10.0/ModLoader.AssemblyInfo.cs
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/obj/Debug/net10.0/ModLoader.csproj.CoreCompileInputs.cache
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/obj/Debug/net10.0/ModLoader.sourcelink.json
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/bin/Debug/net10.0/ModLoader.deps.json
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/bin/Debug/net10.0/ModLoader.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/bin/Debug/net10.0/ModLoader.pdb
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/obj/Debug/net10.0/ModLoader.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/obj/Debug/net10.0/refint/ModLoader.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/obj/Debug/net10.0/ModLoader.pdb
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/ModLoader/obj/Debug/net10.0/ref/ModLoader.dll
