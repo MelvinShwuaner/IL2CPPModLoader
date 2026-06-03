@@ -62,30 +62,26 @@ public class Utilities
         {
             Debug.LogError($"Failed to read {ZipPath}: {req.error}");
         }
-
-        // Write zip to temp location
+        
         string tempZip = Path.Combine(Application.temporaryCachePath, "temp.zip");
         File.WriteAllBytes(tempZip, req.downloadHandler.data);
-
-        // Extract
+        
         ZipFile.ExtractToDirectory(tempZip, Destination);
-
-        // Clean up temp zip
+        
         File.Delete(tempZip);
-
-        Debug.Log("dotnet extracted");
     }
     public static string InternalFilesDir
     {
         get
         {
-            /*using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            using var filesDir = activity.Call<AndroidJavaObject>("getFilesDir");
-
-            return filesDir.Call<string>("getAbsolutePath");*/
-            var temp = "assa";
-            return "" + temp;
+#if UNITY_ANDROID && !UNITY_EDITOR
+        using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        using var filesDir = activity.Call<AndroidJavaObject>("getFilesDir");
+        return Path.Combine(filesDir.Call<string>("getAbsolutePath"), "dotnet");
+#else
+            return Path.Combine(Application.persistentDataPath, "dotnet");
+#endif
         }
     }
 }

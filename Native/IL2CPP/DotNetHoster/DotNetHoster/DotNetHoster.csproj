@@ -7,11 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Reference Include="UnityEngine.AndroidJNIModule">
+        <HintPath>..\Dependencies\UnityEngine.AndroidJNIModule.dll</HintPath>
+      </Reference>
       <Reference Include="UnityEngine.CoreModule">
-        <HintPath>..\..\..\..\..\..\..\Library\Application Support\Steam\steamapps\common\worldbox\worldbox.app\Contents\Resources\Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+        <HintPath>..\Dependencies\UnityEngine.CoreModule.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.UnityWebRequestModule">
-        <HintPath>..\..\..\..\..\..\..\Library\Application Support\Steam\steamapps\common\worldbox\worldbox.app\Contents\Resources\Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+        <HintPath>..\Dependencies\UnityEngine.UnityWebRequestModule.dll</HintPath>
       </Reference>
     </ItemGroup>
 
