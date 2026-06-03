@@ -27,33 +27,31 @@ namespace
     // Forward declarations
     bool load_hostfxr(const char_t *app);
     load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly();
-    typedef void (CORECLR_DELEGATE_CALLTYPE* entry_point_fn)();
 }
 static bool Hosted = false;
-static std::string RuntimeConfigPath;
+static const char* RuntimeConfigPath;
 static hostfxr_handle Context = nullptr;
-static std::string EntryPointPath = nullptr;
+static load_assembly_and_get_function_pointer_fn load_assembly;
 extern "C"
 {
     void Log(const char* message) {
         LOG("%s", message);
     }
     int Host(
-        const char* DotNetPath,
-        const char* EntryPointPath)
+        const char* DotNetPath)
     {
-        if (Hosted) {
-            return EXIT_FAILURE;
-        }
         // Load hostfxr and get exports
         if (!load_hostfxr(DotNetPath))
         {
             LOG("Failed to load hostfxr");
             return EXIT_FAILURE;
         }
-        RuntimeConfigPath = std::string(DotNetPath) + "/runtimeconfig.json";
+        static std::string RuntimeConfigPathStr;
+
+        RuntimeConfigPathStr = std::string(DotNetPath) + "/runtimeconfig.json";
+        RuntimeConfigPath = RuntimeConfigPathStr.c_str();
         int rc = init_for_config_fptr(
-            RuntimeConfigPath.c_str(),
+            RuntimeConfigPath,
             nullptr,
             &Context);
 
@@ -62,33 +60,36 @@ extern "C"
             LOG("hostfxr_initialize_for_runtime_config failed: 0x%x", rc);
             return EXIT_FAILURE;
         }
-        load_assembly_and_get_function_pointer_fn load_assembly_fn =
-           get_dotnet_load_assembly();
+        load_assembly = get_dotnet_load_assembly();
 
-        if (load_assembly_fn == nullptr)
+        if (load_assembly == nullptr)
         {
             LOG("Failed to get load_assembly delegate");
             return EXIT_FAILURE;
         }
-        ::EntryPointPath = std::string(EntryPointPath);
-
-        entry_point_fn entrypoint = nullptr;
-
-        rc = load_assembly_fn(
-            EntryPointPath,
-            "",
-            "Init",
+        Hosted = true;
+        return EXIT_SUCCESS;
+    }
+    int LoadMethod(
+        const char* AssemblyPath,
+        const char* TypeName,
+        const char* MethodName,
+        void** OutFunction)
+    {
+        int rc = load_assembly(
+            AssemblyPath,
+            TypeName,
+            MethodName,
             UNMANAGEDCALLERSONLY_METHOD,
             nullptr,
-            reinterpret_cast<void **>(&entrypoint)
+            OutFunction
         );
-        if (rc != 0 || entrypoint == nullptr) {
+
+        if (rc != 0 || *OutFunction == nullptr)
+        {
+            LOG("Failed to get function: 0x%x", rc);
             return EXIT_FAILURE;
         }
-        entrypoint();
-
-        Hosted = true;
-
         return EXIT_SUCCESS;
     }
     int IsHosting() {
@@ -100,7 +101,6 @@ extern "C"
 /********************************************************************************************
  * Function used to load and activate .NET Core
  ********************************************************************************************/
-
 namespace
 {
     // Forward declarations
