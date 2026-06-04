@@ -1,9 +1,10 @@
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace DotNet.Interop;
 using static DotNet.Core;
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-delegate void Init();
+delegate void Init(IntPtr Path);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 delegate IntPtr IntPtrFromIntPtr(IntPtr a);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -22,8 +23,10 @@ public class System
     public static string EntryPointPath { get; private set; }
     public static void Start(string EntryPointPath)
     {
-        System.EntryPointPath =  EntryPointPath;
-        GetMethod<Init>(EntryPointPath, "EntryPoint", "Init")();
+        var ptr = Marshal.StringToHGlobalAnsi(Application.dataPath);
+        GetMethod<Init>(EntryPointPath, "EntryPoint", "Init")(ptr);
+        Marshal.FreeHGlobal(ptr);
+        
         _getAssembly    = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "GetAssembly");
         _loadAssembly   = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "LoadAssembly");
         _getAssemblyType= GetMethod<IntPtrFromTwoIntPtr>(EntryPointPath, "Reflection", "GetAssemblyType");
@@ -38,7 +41,7 @@ public class System
         
         
         
-        
+        System.EntryPointPath =  EntryPointPath;
     }
     static IntPtrFromIntPtr      _getAssembly;
     static IntPtrFromIntPtr      _loadAssembly;

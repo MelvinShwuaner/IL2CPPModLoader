@@ -8,6 +8,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Reference Include="AsmResolver">
+        <HintPath>..\Dependencies\AsmResolver.dll</HintPath>
+      </Reference>
+      <Reference Include="AsmResolver.DotNet">
+        <HintPath>..\Dependencies\AsmResolver.DotNet.dll</HintPath>
+      </Reference>
+      <Reference Include="AssetRipper.Primitives">
+        <HintPath>..\Dependencies\AssetRipper.Primitives.dll</HintPath>
+      </Reference>
+      <Reference Include="Cpp2IL.Core">
+        <HintPath>..\Dependencies\Cpp2IL.Core.dll</HintPath>
+      </Reference>
       <Reference Include="Il2CppInterop.Common">
         <HintPath>..\Dependencies\Il2CppInterop.Common.dll</HintPath>
       </Reference>
@@ -22,6 +34,15 @@
       </Reference>
       <Reference Include="Il2CppInterop.StructGenerator">
         <HintPath>..\Dependencies\Il2CppInterop.StructGenerator.dll</HintPath>
+      </Reference>
+      <Reference Include="LibCpp2IL">
+        <HintPath>..\Dependencies\LibCpp2IL.dll</HintPath>
+      </Reference>
+      <Reference Include="StableNameDotNet">
+        <HintPath>..\Dependencies\StableNameDotNet.dll</HintPath>
+      </Reference>
+      <Reference Include="WasmDisassembler">
+        <HintPath>..\Dependencies\WasmDisassembler.dll</HintPath>
       </Reference>
     </ItemGroup>
 
