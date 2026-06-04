@@ -1,10 +1,11 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 
 public static class Reflection
 {
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static IntPtr GetAssembly(IntPtr namePtr)
     {
         string name = Marshal.PtrToStringAnsi(namePtr);
@@ -14,7 +15,7 @@ public static class Reflection
         return GCHandle.ToIntPtr(GCHandle.Alloc(assembly));
     }
 
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static IntPtr LoadAssembly(IntPtr pathPtr)
     {
         string path = Marshal.PtrToStringAnsi(pathPtr);
@@ -23,7 +24,7 @@ public static class Reflection
         return GCHandle.ToIntPtr(GCHandle.Alloc(assembly));
     }
 
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static IntPtr GetAssemblyType(IntPtr assemblyHandle, IntPtr namePtr)
     {
         var assembly = (Assembly)GCHandle.FromIntPtr(assemblyHandle).Target;
@@ -33,7 +34,7 @@ public static class Reflection
         return GCHandle.ToIntPtr(GCHandle.Alloc(type));
     }
 
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static IntPtr GetType(IntPtr namePtr)
     {
         string name = Marshal.PtrToStringAnsi(namePtr);
@@ -43,14 +44,14 @@ public static class Reflection
         if (type == null) return IntPtr.Zero;
         return GCHandle.ToIntPtr(GCHandle.Alloc(type));
     }
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static IntPtr GetTypeFromObject(IntPtr objectPtr)
     {
         var obj = GCHandle.FromIntPtr(objectPtr).Target;
         var type = obj.GetType();
         return GCHandle.ToIntPtr(GCHandle.Alloc(type));
     }
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static IntPtr GetMethod(IntPtr typeHandle, IntPtr namePtr)
     {
         var type = (Type)GCHandle.FromIntPtr(typeHandle).Target;
@@ -62,7 +63,7 @@ public static class Reflection
         return GCHandle.ToIntPtr(GCHandle.Alloc(method));
     }
 
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static IntPtr CreateInstance(IntPtr typeHandle)
     {
         var type = (Type)GCHandle.FromIntPtr(typeHandle).Target;
@@ -70,7 +71,7 @@ public static class Reflection
         return GCHandle.ToIntPtr(GCHandle.Alloc(instance));
     }
 
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static IntPtr InvokeMethod(IntPtr methodHandle, IntPtr instanceHandle, IntPtr argsHandle)
     {
         var method   = (MethodInfo)GCHandle.FromIntPtr(methodHandle).Target;
@@ -81,13 +82,13 @@ public static class Reflection
         return GCHandle.ToIntPtr(GCHandle.Alloc(result));
     }
 
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static void ReleaseHandle(IntPtr handle)
     {
         if (handle == IntPtr.Zero) return;
         GCHandle.FromIntPtr(handle).Free();
     }
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static unsafe void EnumerateTypes(IntPtr assemblyHandle, IntPtr callback)
     {
         var assembly = (Assembly)GCHandle.FromIntPtr(assemblyHandle).Target;
@@ -104,7 +105,7 @@ public static class Reflection
             fn(handle);
         }
     }
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static unsafe void EnumerateMethods(IntPtr typeHandle, IntPtr callback)
     {
         var assembly = (Type)GCHandle.FromIntPtr(typeHandle).Target;

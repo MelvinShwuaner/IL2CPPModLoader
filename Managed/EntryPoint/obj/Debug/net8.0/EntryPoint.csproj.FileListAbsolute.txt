@@ -1,0 +1,12 @@
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Debug/net8.0/EntryPoint.deps.json
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Debug/net8.0/EntryPoint.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Debug/net8.0/EntryPoint.pdb
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Debug/net8.0/EntryPoint.GeneratedMSBuildEditorConfig.editorconfig
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Debug/net8.0/EntryPoint.AssemblyInfoInputs.cache
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Debug/net8.0/EntryPoint.AssemblyInfo.cs
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Debug/net8.0/EntryPoint.csproj.CoreCompileInputs.cache
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Debug/net8.0/EntryPoint.sourcelink.json
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Debug/net8.0/EntryPoint.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Debug/net8.0/refint/EntryPoint.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Debug/net8.0/EntryPoint.pdb
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Debug/net8.0/ref/EntryPoint.dll

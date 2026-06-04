@@ -11,6 +11,7 @@
 #define DIR_SEPARATOR '/'
 #define MAX_PATH PATH_MAX
 #define LOG(...) __android_log_print(ANDROID_LOG_ERROR, "DotNetPlugin", __VA_ARGS__)
+#define LOGMSG(...) __android_log_print(ANDROID_LOG_DEFAULT, "DotNetPlugin", __VA_ARGS__)
 #define string_compare strcmp
 
 namespace
@@ -33,7 +34,7 @@ static load_assembly_and_get_function_pointer_fn load_assembly;
 extern "C"
 {
     void Log(const char* message) {
-        LOG("%s", message);
+        LOGMSG("%s", message);
     }
     int Host(
         const char* DotNetPath)
