@@ -4,19 +4,6 @@ using UnityEngine;
 
 namespace DotNet.Interop;
 using static DotNet.Core;
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-delegate void Init(IntPtr Path, IntPtr Logger);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-delegate IntPtr IntPtrFromIntPtr(IntPtr a);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-delegate IntPtr IntPtrFromTwoIntPtr(IntPtr a, IntPtr b);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-delegate IntPtr IntPtrFromThreeIntPtr(IntPtr a, IntPtr b, IntPtr c);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-delegate void VoidFromIntPtr(IntPtr a);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-delegate void VoidFromTwoIntPtr(IntPtr a, IntPtr b);
-
 public enum MsgType
 {
     Message = 0,
@@ -46,7 +33,7 @@ public class System
         System.Logger = Logger;
         var ptr = Marshal.StringToHGlobalAnsi(Application.dataPath);
         var log = Marshal.GetFunctionPointerForDelegate(Log);
-        GetMethod<Init>(EntryPointPath, "EntryPoint", "Init")(ptr, log);
+        GetMethod<VoidFromTwoIntPtr>(EntryPointPath, "EntryPoint", "Init")(ptr, log);
         Marshal.FreeHGlobal(ptr);
         
         _getAssembly    = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "GetAssembly");
