@@ -14,6 +14,12 @@
       <Reference Include="AsmResolver.DotNet">
         <HintPath>..\Dependencies\AsmResolver.DotNet.dll</HintPath>
       </Reference>
+      <Reference Include="AsmResolver.PE">
+        <HintPath>..\Dependencies\AsmResolver.PE.dll</HintPath>
+      </Reference>
+      <Reference Include="AsmResolver.PE.File">
+        <HintPath>..\Dependencies\AsmResolver.PE.File.dll</HintPath>
+      </Reference>
       <Reference Include="AssetRipper.Primitives">
         <HintPath>..\Dependencies\AssetRipper.Primitives.dll</HintPath>
       </Reference>

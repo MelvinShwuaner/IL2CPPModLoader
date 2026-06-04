@@ -31,7 +31,6 @@ public class Core
         {
             throw new NotSupportedException("DotNet is already running");
         }
-
         int result = Host(dotnetRoot);
         if (result != 0)
         {

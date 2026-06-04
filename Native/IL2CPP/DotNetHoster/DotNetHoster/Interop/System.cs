@@ -4,7 +4,7 @@ using UnityEngine;
 namespace DotNet.Interop;
 using static DotNet.Core;
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-delegate void Init(IntPtr Path);
+delegate void Init(IntPtr Path, IntPtr Logger);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 delegate IntPtr IntPtrFromIntPtr(IntPtr a);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -15,16 +15,36 @@ delegate IntPtr IntPtrFromThreeIntPtr(IntPtr a, IntPtr b, IntPtr c);
 delegate void VoidFromIntPtr(IntPtr a);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 delegate void VoidFromTwoIntPtr(IntPtr a, IntPtr b);
+
+public enum MsgType
+{
+    Message = 0,
+    Warning = 1,
+    Error = 2
+}
+/// <summary>
+/// type 0 is msg, 1 is warning, 2 is error
+/// </summary>
+public delegate void Logger(string msg, MsgType Type);
 /// <summary>
 /// this class utilizes the Entry Point dll
 /// </summary>
 public class System
 {
-    public static string EntryPointPath { get; private set; }
-    public static void Start(string EntryPointPath)
+    private static Logger Logger;
+
+    static void Log(IntPtr msg, int Type)
     {
+        string message = Marshal.PtrToStringAnsi(msg)!;
+        Logger(message, (MsgType)Type);
+    }
+    public static string EntryPointPath { get; private set; }
+    public static void Start(string EntryPointPath, Logger Logger)
+    {
+        System.Logger = Logger;
         var ptr = Marshal.StringToHGlobalAnsi(Application.dataPath);
-        GetMethod<Init>(EntryPointPath, "EntryPoint", "Init")(ptr);
+        var log = Marshal.GetFunctionPointerForDelegate(Log);
+        GetMethod<Init>(EntryPointPath, "EntryPoint", "Init")(ptr, log);
         Marshal.FreeHGlobal(ptr);
         
         _getAssembly    = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "GetAssembly");

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 project(DotNetPlugin)
 
 add_library(DotNetPlugin SHARED
-        library.cpp
+        dotnet.cpp
         assetmanager.cpp
 )
 

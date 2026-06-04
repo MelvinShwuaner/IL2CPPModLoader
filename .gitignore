@@ -1,2 +1,4 @@
 .DS_Store
 Native/.DS_Store
+/Managed/ModLoader/obj
+/Managed/ModLoader/bin

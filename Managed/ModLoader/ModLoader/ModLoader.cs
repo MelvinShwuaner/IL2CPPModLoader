@@ -15,15 +15,15 @@ public class Core
     {
         public static void Msg(string message)
         {
-            EntryPoint.Logger(message);
+            EntryPoint.Log(message);
         }
         public static void Warning(string message)
         {
-            EntryPoint.Logger("Warning: " + message);
+            EntryPoint.Log(message, MsgType.Warning);
         }
         public static void Error(string message)
         {
-            EntryPoint.Logger("Error: " + message);
+            EntryPoint.Log(message, MsgType.Error);
         }
     }
 }

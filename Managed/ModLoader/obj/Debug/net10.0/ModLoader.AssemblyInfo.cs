@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ModLoader")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+016e69b4cf8755aadbf37bdd2e06be52a3482c43")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+87e7133a3dce715c835025ca9c66525f705347a3")]
 [assembly: System.Reflection.AssemblyProductAttribute("ModLoader")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ModLoader")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
