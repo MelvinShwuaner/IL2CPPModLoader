@@ -38,14 +38,10 @@ public class Utilities
     {
         get
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-        using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        using var filesDir = activity.Call<AndroidJavaObject>("getFilesDir");
-        return Path.Combine(filesDir.Call<string>("getAbsolutePath"), "dotnet");
-#else
-            return Path.Combine(Application.persistentDataPath, "dotnet");
-#endif
+            using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            using var filesDir = activity.Call<AndroidJavaObject>("getFilesDir");
+            return Path.Combine(filesDir.Call<string>("getAbsolutePath"), "dotnet");
         }
     }
 }

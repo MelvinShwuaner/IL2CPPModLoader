@@ -1,9 +1,12 @@
 ﻿using System.IO.Compression;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace DotNet;
 public class Core
 {
+    [DllImport("DotNetPlugin")]
+    private static extern void SetAssetManager(IntPtr assetManager);
     [DllImport("DotNetPlugin", EntryPoint = "IsHosting")]
     private static extern int IsHostingInternal();
 
@@ -65,5 +68,16 @@ public class Core
     public static void PrepareDotNet(string ZipPath)
     {
         Utilities.ExtractFromStreamingAssets(ZipPath, dotnetRoot);
+    }
+    /// <summary>
+    /// loads the unity asset manager to be used by the mod loader
+    /// </summary>
+    public static void InitAssetManager()
+    {
+        using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        using var activity    = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        using var assets      = activity.Call<AndroidJavaObject>("getAssets");
+
+        SetAssetManager(assets.GetRawObject());
     }
 }

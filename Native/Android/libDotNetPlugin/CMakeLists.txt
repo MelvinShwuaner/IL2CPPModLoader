@@ -3,6 +3,7 @@ project(DotNetPlugin)
 
 add_library(DotNetPlugin SHARED
         library.cpp
+        assetmanager.cpp
 )
 
 target_include_directories(DotNetPlugin PRIVATE
