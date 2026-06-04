@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net10.0": {}
+    "net10.0": {
+      "EntryPoint/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/EntryPoint.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/EntryPoint.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "EntryPoint/1.0.0": {
+      "type": "project",
+      "path": "../EntryPoint/EntryPoint.csproj",
+      "msbuildProject": "../EntryPoint/EntryPoint.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net10.0": []
+    "net10.0": [
+      "EntryPoint >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "/Users/hamza/.nuget/packages/": {}
@@ -32,7 +51,11 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/EntryPoint.csproj": {
+              "projectPath": "/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/EntryPoint.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
