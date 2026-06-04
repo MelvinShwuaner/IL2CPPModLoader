@@ -23,18 +23,18 @@ public class System
     public static void Start(string EntryPointPath)
     {
         System.EntryPointPath =  EntryPointPath;
-        GetMethod<Init>(EntryPointPath, "EntryPoint, EntryPoint", "Init")();
-        _getAssembly    = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection, EntryPoint", "GetAssembly");
-        _loadAssembly   = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection, EntryPoint", "LoadAssembly");
-        _getAssemblyType= GetMethod<IntPtrFromTwoIntPtr>(EntryPointPath, "Reflection, EntryPoint", "GetAssemblyType");
-        _getType        = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection, EntryPoint", "GetType");
-        _getTypeObject  = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection, EntryPoint", "GetTypeFromObject");
-        _getMethod      = GetMethod<IntPtrFromTwoIntPtr>(EntryPointPath, "Reflection, EntryPoint", "GetMethod");
-        _createInstance = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection, EntryPoint", "CreateInstance");
-        _invokeMethod   = GetMethod<IntPtrFromThreeIntPtr>(EntryPointPath, "Reflection, EntryPoint", "InvokeMethod");
-        _releaseHandle  = GetMethod<VoidFromIntPtr>     (EntryPointPath, "Reflection, EntryPoint", "ReleaseHandle");
-        _enumerateTypes = GetMethod<VoidFromTwoIntPtr>(EntryPointPath, "Reflection, EntryPoint", "EnumerateTypes");
-        _enumerateMethods = GetMethod<VoidFromTwoIntPtr>(EntryPointPath, "Reflection, EntryPoint", "EnumerateMethods");
+        GetMethod<Init>(EntryPointPath, "EntryPoint", "Init")();
+        _getAssembly    = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "GetAssembly");
+        _loadAssembly   = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "LoadAssembly");
+        _getAssemblyType= GetMethod<IntPtrFromTwoIntPtr>(EntryPointPath, "Reflection", "GetAssemblyType");
+        _getType        = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "GetType");
+        _getTypeObject  = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "GetTypeFromObject");
+        _getMethod      = GetMethod<IntPtrFromTwoIntPtr>(EntryPointPath, "Reflection", "GetMethod");
+        _createInstance = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "CreateInstance");
+        _invokeMethod   = GetMethod<IntPtrFromThreeIntPtr>(EntryPointPath, "Reflection", "InvokeMethod");
+        _releaseHandle  = GetMethod<VoidFromIntPtr>     (EntryPointPath, "Reflection", "ReleaseHandle");
+        _enumerateTypes = GetMethod<VoidFromTwoIntPtr>(EntryPointPath, "Reflection", "EnumerateTypes");
+        _enumerateMethods = GetMethod<VoidFromTwoIntPtr>(EntryPointPath, "Reflection", "EnumerateMethods");
         
         
         

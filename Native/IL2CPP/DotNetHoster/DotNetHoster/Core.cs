@@ -13,9 +13,15 @@ public class Core
     [DllImport("DotNetPlugin")]
     private static extern int LoadMethod(string assemblyPath, string typeName, string methodName,
         out IntPtr outFunction);
-
+    /// <summary>
+    /// is DotNet being hosted?
+    /// </summary>
     public static bool IsHosting => IsHostingInternal() == 1;
-
+    /// <summary>
+    /// Hosts DotNet. 
+    /// </summary>
+    /// <exception cref="NotSupportedException">DotNet is already running!</exception>
+    /// <exception cref="InvalidOperationException">dotnet was failed to be hosted</exception>
     public static void HostDotNet()
     {
         if (IsHosting)
@@ -29,15 +35,24 @@ public class Core
             throw new InvalidOperationException("Failed to Host DotNet!");
         }
     }
-
+    /// <summary>
+    /// loads an assembly and returns a function pointer
+    /// </summary>
+    /// <param name="AssemblyPath">the full path to the DLL</param>
+    /// <param name="TypeName">the Type Name. "namespace.class"</param>
+    /// <param name="MethodName">the name of the method</param>
+    /// <typeparam name="T">the delegate type. must be a UnManagedCallersOnly method</typeparam>
+    /// <returns></returns>
+    /// <exception cref="NotSupportedException">DotNet is not being hosted</exception>
+    /// <exception cref="MissingMemberException">the method, dll, or class was failed to be found</exception>
     public static T GetMethod<T>(string AssemblyPath, string TypeName, string MethodName) where T : Delegate
     {
         if (!IsHosting)
         {
             throw new NotSupportedException("DotNet is not running!");
         }
-
-        if (LoadMethod(AssemblyPath, TypeName, MethodName, out var fnPtr) != 0)
+        string DllName = Path.GetFileNameWithoutExtension(AssemblyPath); 
+        if (LoadMethod(AssemblyPath, TypeName + ", "+DllName, MethodName, out var fnPtr) != 0)
         {
             throw new MissingMemberException($"{AssemblyPath}::{TypeName}::{MethodName} was not found!");
         }
