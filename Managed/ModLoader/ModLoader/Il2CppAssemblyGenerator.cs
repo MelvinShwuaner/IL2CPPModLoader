@@ -14,7 +14,7 @@ using LibCpp2IL.Wasm;
 namespace ModLoader;
 public class Il2CppAssemblyGenerator
 {
-    static string MainPath => EntryPoint.MainPath + "/Il2CppAssemblies";
+    static string MainPath => Core.MainPath + "/Il2CppAssemblies";
     private static string GameAssemblyPath;
     public static void Prepare()
     {
@@ -23,35 +23,42 @@ public class Il2CppAssemblyGenerator
             return;
         }
         string Stubs = Path.Combine(Path.GetTempPath(), "Il2CppAssemblies");
-        GameAssemblyPath = EntryPoint.DataPath + "lib/arm64/libil2cpp.so";
+        GameAssemblyPath = Core.DataPath + "lib/arm64/libil2cpp.so";
         if (!GenerateStubs(Stubs))
         {
-            Core.Logger.Error("Failed to  prepare assemblies");
+            Core.Logger.Error("Failed to prepare assemblies");
             return;
         }
         ExecuteInterop(Stubs);
     }
     internal static bool GenerateStubs(string OutputFolder)
     {
-
-        byte[] mdData = AssetManager.ReadAssetBytes("bin/Data/Managed/Metadata/global-metadata.dat");
-        string mdPath = Path.Combine(Path.GetTempPath(), "global-metadata.dat");
-        File.WriteAllBytes(mdPath, mdData);
-
-        Cpp2IlApi.Init();
-        Cpp2IlApi.ConfigureLib(false);
-        var result = new Cpp2IlRuntimeArgs()
+        try
         {
-            PathToAssembly = GameAssemblyPath,
-            PathToMetadata = mdPath,
-            UnityVersion = Core.UnityVersion,
-            Valid = true,
-            OutputRootDirectory = OutputFolder,
-            OutputFormat = OutputFormatRegistry.GetFormat("dummydll"),
-            ProcessingLayersToRun = [ProcessingLayerRegistry.GetById("attributeinjector")],
-        };
+            byte[] mdData = AssetManager.ReadAssetBytes("bin/Data/Managed/Metadata/global-metadata.dat");
+            string mdPath = Path.Combine(Path.GetTempPath(), "global-metadata.dat");
+            File.WriteAllBytes(mdPath, mdData);
 
-        return RunCpp2IL(result);
+            Cpp2IlApi.Init();
+            Cpp2IlApi.ConfigureLib(false);
+            var result = new Cpp2IlRuntimeArgs()
+            {
+                PathToAssembly = GameAssemblyPath,
+                PathToMetadata = mdPath,
+                UnityVersion = Core.UnityVersion,
+                Valid = true,
+                OutputRootDirectory = OutputFolder,
+                OutputFormat = OutputFormatRegistry.GetFormat("dummydll"),
+                ProcessingLayersToRun = [ProcessingLayerRegistry.GetById("attributeinjector")],
+            };
+
+            return RunCpp2IL(result);
+        }
+        catch (Exception e)
+        {
+            Core.Logger.Error("Failed to generate il2cpp stubs due to: " + e.Message + " at " + e.StackTrace);
+            return false;
+        }
     }
 
     // mostly copied from https://github.com/SamboyCoding/Cpp2IL/blob/development/Cpp2IL/Program.cs
@@ -113,7 +120,7 @@ public class Il2CppAssemblyGenerator
             
                 try
                 {
-            run(processingLayer);
+                    run(processingLayer);
                 }
                 catch (Exception e)
                 {
@@ -146,6 +153,7 @@ public class Il2CppAssemblyGenerator
 
         Il2CppInteropGenerator.Create(opts)
             .AddInteropAssemblyGenerator()
+            .AddLogger(Core.Logger.Instance)
             .Run();
     }
 }

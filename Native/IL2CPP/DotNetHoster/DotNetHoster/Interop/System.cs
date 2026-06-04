@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using AOT;
 using UnityEngine;
 
 namespace DotNet.Interop;
@@ -25,6 +26,7 @@ public enum MsgType
 /// <summary>
 /// type 0 is msg, 1 is warning, 2 is error
 /// </summary>
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate void Logger(string msg, MsgType Type);
 /// <summary>
 /// this class utilizes the Entry Point dll
@@ -32,7 +34,7 @@ public delegate void Logger(string msg, MsgType Type);
 public class System
 {
     private static Logger Logger;
-
+    [MonoPInvokeCallback(typeof(Logger))]
     static void Log(IntPtr msg, int Type)
     {
         string message = Marshal.PtrToStringAnsi(msg)!;

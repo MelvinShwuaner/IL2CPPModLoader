@@ -1,32 +1,42 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Loader;
+using ModLoader;
 
 public static class EntryPoint
 {
-    public static string MainPath{ get; private set; }
-    public static string DataPath { get; private set; }
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static void Init(IntPtr DataPath, IntPtr logger)
     {
-       EntryPoint.DataPath = Path.GetDirectoryName(Marshal.PtrToStringAnsi(DataPath))!;
-       MainPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-       Logger = Marshal.GetDelegateForFunctionPointer<Logger>(logger);
-       Log("Dotnet: Initializing");
+       Core.Start(
+           Marshal.GetDelegateForFunctionPointer<LoggerNative>(logger), 
+           Log,
+           EntryPoint.DataPath, 
+           Path.GetDirectoryName(Marshal.PtrToStringAnsi(DataPath))!
+       );
     }
-    static Logger Logger;
-    public static void Log(string message, MsgType Type =  MsgType.Message)
+    private static readonly string DataPath = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location)!;
+    static EntryPoint()
     {
-        IntPtr ptr = Marshal.StringToHGlobalAnsi(message);
-        Logger(ptr, (int)Type);
-        Marshal.FreeHGlobal(ptr);
+        if (File.Exists(LogPath))
+        {
+            File.Delete(DataPath + "/previous.log");
+            File.Copy(LogPath, DataPath + "/previous.log");
+            File.Delete(LogPath);
+        }
+        AssemblyLoadContext.Default.Resolving += (context, name) =>
+        {
+            string path = Path.Combine(DataPath, name.Name + ".dll");
+            if (File.Exists(path))
+                return context.LoadFromAssemblyPath(path);
+            Log($"DLL NOT FOUND: {path}");
+            return null;
+        };
     }
-}
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void Logger(IntPtr msg, int Type);
-public enum MsgType
-{
-    Message = 0,
-    Warning = 1,
-    Error = 2
+    private static string LogPath = DataPath + "/latest.log";
+    static void Log(string msg)
+    {
+        File.AppendAllText(LogPath, msg + "\n");
+    }
 }

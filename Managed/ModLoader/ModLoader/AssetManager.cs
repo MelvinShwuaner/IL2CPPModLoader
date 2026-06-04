@@ -8,7 +8,7 @@ public class AssetManager
     [DllImport("DotNetPlugin")]
     private static extern void FreeAssetBuffer(IntPtr buffer);
 
-    public static byte[] ReadAssetBytes(string path)
+    public static byte[]? ReadAssetBytes(string path)
     {
         IntPtr buffer = ReadAsset(path, out int size);
         if (buffer == IntPtr.Zero) return null;

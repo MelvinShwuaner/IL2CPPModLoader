@@ -8,8 +8,130 @@
     ".NETCoreApp,Version=v8.0": {},
     ".NETCoreApp,Version=v8.0/android-arm64": {
       "EntryPoint/1.0.0": {
+        "dependencies": {
+          "ModLoader": "1.0.0"
+        },
         "runtime": {
           "EntryPoint.dll": {}
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/11.0.0-preview.4.26230.115": {
+        "runtime": {
+          "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.26.23115"
+          }
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/11.0.0-preview.4.26230.115": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.4.26230.115",
+          "System.Diagnostics.DiagnosticSource": "11.0.0-preview.4.26230.115"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.26.23115"
+          }
+        }
+      },
+      "System.Diagnostics.DiagnosticSource/11.0.0-preview.4.26230.115": {
+        "runtime": {
+          "lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.26.23115"
+          }
+        }
+      },
+      "ModLoader/1.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "11.0.0-preview.4.26230.115"
+        },
+        "runtime": {
+          "ModLoader.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Cpp2IL.Core/2022.1.0.0": {
+        "runtime": {
+          "Cpp2IL.Core.dll": {
+            "assemblyVersion": "2022.1.0.0",
+            "fileVersion": "2022.1.0.0"
+          }
+        }
+      },
+      "AsmResolver.DotNet/6.0.0.0": {
+        "runtime": {
+          "AsmResolver.DotNet.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.0.0"
+          }
+        }
+      },
+      "Il2CppInterop.Generator/1.5.2.0": {
+        "runtime": {
+          "Il2CppInterop.Generator.dll": {
+            "assemblyVersion": "1.5.2.0",
+            "fileVersion": "1.5.2.0"
+          }
+        }
+      },
+      "LibCpp2IL/2022.1.0.0": {
+        "runtime": {
+          "LibCpp2IL.dll": {
+            "assemblyVersion": "2022.1.0.0",
+            "fileVersion": "2022.1.0.0"
+          }
+        }
+      },
+      "Il2CppInterop.Common/1.5.2.0": {
+        "runtime": {
+          "Il2CppInterop.Common.dll": {
+            "assemblyVersion": "1.5.2.0",
+            "fileVersion": "1.5.2.0"
+          }
+        }
+      },
+      "AsmResolver/6.0.0.0": {
+        "runtime": {
+          "AsmResolver.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.0.0"
+          }
+        }
+      },
+      "AsmResolver.PE/6.0.0.0": {
+        "runtime": {
+          "AsmResolver.PE.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.0.0"
+          }
+        }
+      },
+      "StableNameDotNet/0.1.0.0": {
+        "runtime": {
+          "StableNameDotNet.dll": {
+            "assemblyVersion": "0.1.0.0",
+            "fileVersion": "0.1.0.0"
+          }
+        }
+      },
+      "WasmDisassembler/2022.1.0.0": {
+        "runtime": {
+          "WasmDisassembler.dll": {
+            "assemblyVersion": "2022.1.0.0",
+            "fileVersion": "2022.1.0.0"
+          }
+        }
+      },
+      "AsmResolver.PE.File/6.0.0.0": {
+        "runtime": {
+          "AsmResolver.PE.File.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.0.0"
+          }
         }
       }
     }
@@ -17,6 +139,82 @@
   "libraries": {
     "EntryPoint/1.0.0": {
       "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/11.0.0-preview.4.26230.115": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8lCRTWtFbIM5DTZ5JaPJDbNNEUsPGDq8TteHzs5yIzZqTa15vNPacJFKA+Li1FRtvW/A96nmf1rIEJcxiuDRBg==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/11.0.0-preview.4.26230.115",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.11.0.0-preview.4.26230.115.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Logging.Abstractions/11.0.0-preview.4.26230.115": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-W5LkYolc6E6j5gscomfAZ0QAjxTR4yrcgnNKuSKT9rx5umHIgmaN+uVEZJAoEXNxa3cP6KsgwzGcZQOQ2mzb/g==",
+      "path": "microsoft.extensions.logging.abstractions/11.0.0-preview.4.26230.115",
+      "hashPath": "microsoft.extensions.logging.abstractions.11.0.0-preview.4.26230.115.nupkg.sha512"
+    },
+    "System.Diagnostics.DiagnosticSource/11.0.0-preview.4.26230.115": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7p7Zo+D+Mcqb9IJaAQsAvK5ZsdC952Xy5nZn28EeWHcNdR26vcGLh+WF57KyVqEydpA2AbQwrQtZEF02yX48Pw==",
+      "path": "system.diagnostics.diagnosticsource/11.0.0-preview.4.26230.115",
+      "hashPath": "system.diagnostics.diagnosticsource.11.0.0-preview.4.26230.115.nupkg.sha512"
+    },
+    "ModLoader/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Cpp2IL.Core/2022.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AsmResolver.DotNet/6.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Il2CppInterop.Generator/1.5.2.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LibCpp2IL/2022.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Il2CppInterop.Common/1.5.2.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AsmResolver/6.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AsmResolver.PE/6.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "StableNameDotNet/0.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WasmDisassembler/2022.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AsmResolver.PE.File/6.0.0.0": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }
