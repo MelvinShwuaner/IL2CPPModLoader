@@ -21,8 +21,9 @@ public static class EntryPoint
     {
         if (File.Exists(LogPath))
         {
-            File.Delete(DataPath + "/previous.log");
-            File.Copy(LogPath, DataPath + "/previous.log");
+            if(File.Exists(PreviousLog))
+                File.Delete(PreviousLog);
+            File.Copy(LogPath, PreviousLog);
             File.Delete(LogPath);
         }
         AssemblyLoadContext.Default.Resolving += (context, name) =>
@@ -34,7 +35,8 @@ public static class EntryPoint
             return null;
         };
     }
-    private static string LogPath = DataPath + "/latest.log";
+    private static readonly string LogPath = DataPath + "/latest.log";
+    private static readonly string PreviousLog = DataPath + "/previous.log";
     static void Log(string msg)
     {
         File.AppendAllText(LogPath, msg + "\n");
