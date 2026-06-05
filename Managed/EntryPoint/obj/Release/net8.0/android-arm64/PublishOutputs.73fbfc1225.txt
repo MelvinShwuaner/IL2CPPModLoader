@@ -9,7 +9,11 @@
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/AssetRipper.Primitives.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/Il2CppInterop.Common.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/Il2CppInterop.HarmonySupport.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/Cpp2IL.Core.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/Disarm.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/LibCpp2IL.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/0Harmony.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/Disarm.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/MonoMod.Utils.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/Mono.Cecil.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/MonoMod.RuntimeDetour.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/MonoMod.Core.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/publish/ModLoader.pdb

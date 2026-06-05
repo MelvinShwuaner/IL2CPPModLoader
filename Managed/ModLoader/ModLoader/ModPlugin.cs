@@ -29,7 +29,7 @@ public abstract class ModPlugin
     }
     public string Name { get; }
     public abstract void OnLoad();
-    internal string Path;
+    public string Path { get; internal set; }
 }
 [AttributeUsage(AttributeTargets.Class)]
 public class RegisterTypeInIl2Cpp(params Type[] interfaces) : Attribute

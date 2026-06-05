@@ -2,7 +2,6 @@
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/EntryPoint.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/EntryPoint.pdb
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/ModLoader.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Cpp2IL.Core.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Il2CppInterop.Common.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/ModLoader.pdb
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Release/net8.0/android-arm64/EntryPoint.csproj.AssemblyReference.cache
@@ -21,3 +20,8 @@
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Il2CppInterop.HarmonySupport.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Disarm.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/0Harmony.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/LibCpp2IL.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/MonoMod.Utils.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Mono.Cecil.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/MonoMod.RuntimeDetour.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/MonoMod.Core.dll
