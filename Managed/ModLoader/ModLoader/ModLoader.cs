@@ -59,7 +59,14 @@ public class Core
             else
             {
                 Plugin.Path = Path;
-                Plugin.OnLoad();
+                try
+                {
+                    Plugin.OnLoad();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"Failed to load plugin {Plugin.Name}: {e.Message}");
+                }
             }
         }
     }
@@ -102,10 +109,10 @@ public class Core
             switch (logLevel)
             {
                 case LogLevel.Information:
-                case LogLevel.Trace:
                 case LogLevel.Debug: Msg(formatter(state, exception)); break;
                 case LogLevel.Critical:
                 case LogLevel.Error: Error(formatter(state, exception)); break;
+                case LogLevel.Trace:
                 case LogLevel.Warning: Warning(formatter(state, exception)); break;
                 case LogLevel.None:
                     break;
