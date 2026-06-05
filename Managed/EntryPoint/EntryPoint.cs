@@ -7,16 +7,17 @@ using ModLoader;
 public static class EntryPoint
 {
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
-    public static void Init(IntPtr DataPath, IntPtr logger)
+    public static void Init(IntPtr _, IntPtr logger)
     {
-       Core.Start(
+       Core.PreStart(
            Marshal.GetDelegateForFunctionPointer<LoggerNative>(logger), 
            Log,
-           EntryPoint.DataPath, 
-           Path.GetDirectoryName(Marshal.PtrToStringAnsi(DataPath))!
+           MainPath
        );
+       //rn i will do it here
+       Core.Start();
     }
-    private static readonly string DataPath = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location)!;
+    private static readonly string MainPath = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location)!;
     static EntryPoint()
     {
         if (File.Exists(LogPath))
@@ -28,15 +29,45 @@ public static class EntryPoint
         }
         AssemblyLoadContext.Default.Resolving += (context, name) =>
         {
-            string path = Path.Combine(DataPath, name.Name + ".dll");
-            if (File.Exists(path))
-                return context.LoadFromAssemblyPath(path);
-            Log($"DLL NOT FOUND: {path}");
+            var result = Check(MainPath, name.Name!, context);
+            if (result != null)
+                return result;
+            Log("Failed to load " + name.Name + ".dll");
             return null;
         };
     }
-    private static readonly string LogPath = DataPath + "/latest.log";
-    private static readonly string PreviousLog = DataPath + "/previous.log";
+    static Assembly? Check(string Path, string Name, AssemblyLoadContext context)
+    {
+        foreach (var directory in Directory.GetDirectories(Path))
+        {
+            var result = Check(directory, Name, context);
+            if (result != null)
+            {
+                return result;
+            }
+        }
+        string path = System.IO.Path.Combine(Path, Name + ".dll");
+        if (!File.Exists(path)) return null;
+        try
+        {
+            var assemblyName = AssemblyName.GetAssemblyName(path);
+            if (!string.Equals(assemblyName.Name, Name, 
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                Log($"Skipping {path} — assembly name mismatch: {assemblyName.Name}");
+                return null;
+            }
+            Log($"Resolved {Name} at {path}");
+            return context.LoadFromAssemblyPath(path);
+        }
+        catch (Exception e)
+        {
+            Log($"Failed to load {path}: {e.Message}");
+            return null;
+        }
+    }
+    private static readonly string LogPath = MainPath + "/latest.log";
+    private static readonly string PreviousLog = MainPath + "/previous.log";
     static void Log(string msg)
     {
         File.AppendAllText(LogPath, msg + "\n");

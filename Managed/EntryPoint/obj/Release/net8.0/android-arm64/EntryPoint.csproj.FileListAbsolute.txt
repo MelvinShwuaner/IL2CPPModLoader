@@ -3,15 +3,7 @@
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/EntryPoint.pdb
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/ModLoader.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Cpp2IL.Core.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/AsmResolver.DotNet.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/LibCpp2IL.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Il2CppInterop.Generator.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Il2CppInterop.Common.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/AsmResolver.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/AsmResolver.PE.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/StableNameDotNet.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/WasmDisassembler.dll
-/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/AsmResolver.PE.File.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/ModLoader.pdb
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Release/net8.0/android-arm64/EntryPoint.csproj.AssemblyReference.cache
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Release/net8.0/android-arm64/EntryPoint.GeneratedMSBuildEditorConfig.editorconfig
@@ -24,3 +16,8 @@
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Release/net8.0/android-arm64/refint/EntryPoint.dll
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Release/net8.0/android-arm64/EntryPoint.pdb
 /Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/obj/Release/net8.0/android-arm64/ref/EntryPoint.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Il2CppInterop.Runtime.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/AssetRipper.Primitives.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Il2CppInterop.HarmonySupport.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/Disarm.dll
+/Users/hamza/Documents/GitHub/MonoHoster/Managed/EntryPoint/bin/Release/net8.0/android-arm64/0Harmony.dll

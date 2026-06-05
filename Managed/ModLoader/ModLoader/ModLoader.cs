@@ -1,38 +1,77 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Reflection;
+using System.Runtime.InteropServices;
 using AssetRipper.Primitives;
-using Cpp2IL.Core;
+using Il2CppInterop.Common;
+using Il2CppInterop.HarmonySupport;
+using Il2CppInterop.Runtime.Startup;
+using LibCpp2IL;
 using Microsoft.Extensions.Logging;
 
 namespace ModLoader;
 public class Core
 {
     public static UnityVersion UnityVersion { get; private set; }
-    public static string MainPath{ get; private set; }
-    public static string DataPath { get; private set; }
-    public static void Start(LoggerNative logger, Action<string> LoggerManaged, string MainPath, string DataPath)
+    internal static Dictionary<string, ModPlugin> Plugins = new  Dictionary<string, ModPlugin>();
+    internal static void PreStart(LoggerNative logger, Action<string> LoggerManaged, string MainPath)
     {
         Logger.native = logger;
         Logger.managed = LoggerManaged;
-        Core.MainPath =  MainPath;
-        Core.DataPath = DataPath;
+        Enviornment.MainPath =  MainPath;
         Logger.Msg("DotNet: Initializing");
         
         UnityVersion = GetVersion();
         Logger.Msg("UnityVersion: " + UnityVersion);
         
-        Il2CppAssemblyGenerator.Prepare();
+        Il2CppInteropRuntime.Create(new RuntimeConfiguration
+            {
+                UnityVersion = new Version(UnityVersion.Major, UnityVersion.Minor, UnityVersion.Build),
+                DetourProvider = new NativeDetourProvider()
+            })
+            .AddLogger(Logger.Instance)
+            .AddHarmonySupport()
+            .Start();
     }
-
+    internal static void Start()
+    {
+        if (!Directory.Exists(Enviornment.PluginsPath))
+        {
+            Directory.CreateDirectory(Enviornment.PluginsPath);
+            return;
+        }
+        foreach (var File in Directory.GetFiles(Enviornment.PluginsPath).Where(s => s.EndsWith(".dll")))
+        {
+            LoadPlugin(File);
+        }
+    }
+    public static void LoadPlugin(string Path)
+    {
+        var plugins = ModPlugin.LoadFrom(Path);
+        if (plugins.Count == 0)
+        {
+            Logger.Msg("Plugins not found: " + Path);
+        }
+        foreach (var Plugin in plugins)
+        {
+            if (!Plugins.TryAdd(Plugin.Name, Plugin))
+            {
+                Logger.Msg($"plugin name conflict: {Plugin.Name} between {Path} and {Plugins[Plugin.Name].Path}");
+            }
+            else
+            {
+                Plugin.Path = Path;
+                Plugin.OnLoad();
+            }
+        }
+    }
     static UnityVersion GetVersion()
     {
-        byte[] game = AssetManager.ReadAssetBytes("bin/Data/globalgamemanagers");
+        byte[]? game = AssetManager.ReadAssetBytes("bin/Data/globalgamemanagers");
         if (game != null)
         {
-            return Cpp2IlApi.GetVersionFromGlobalGameManagers(game);
+            return LibCpp2IlMain.GetVersionFromGlobalGameManagers(game);
         }
-        game = AssetManager.ReadAssetBytes("bin/Data/data.unity3d");
-        using var stream = new MemoryStream(game);
-        return Cpp2IlApi.GetVersionFromDataUnity3D(stream);
+        game = AssetManager.ReadAssetBytes("bin/Data/data.unity3d")!;
+        return LibCpp2IlMain.GetVersionFromDataUnity3D(new MemoryStream(game));
     }
     public class Logger : ILogger
     {
