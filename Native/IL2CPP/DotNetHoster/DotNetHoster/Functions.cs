@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace DotNet.Interop;
+namespace DotNet;
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate IntPtr IntPtrFromIntPtr(IntPtr a);

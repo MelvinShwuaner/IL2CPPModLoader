@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using AOT;
 
-namespace DotNet.Interop;
+namespace DotNet;
 using static DotNet.Core;
 public enum MsgType
 {
@@ -9,14 +9,12 @@ public enum MsgType
     Warning = 1,
     Error = 2
 }
-/// <summary>
-/// type 0 is msg, 1 is warning, 2 is error
-/// </summary>
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate void Logger(string msg, MsgType Type);
 /// <summary>
 /// this class utilizes the Entry Point dll
 /// </summary>
+/// <remarks>it is possible for users to have their own custom entry point as long as they have the static methods PreStart and Start</remarks>
 public class System
 {
     private static Logger Logger;
