@@ -14,3 +14,7 @@ public delegate void VoidFromIntPtr(IntPtr a);
 public delegate void VoidFromTwoIntPtr(IntPtr a, IntPtr b);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate void VoidFromThreeIntPtr(IntPtr a, IntPtr b, IntPtr c);
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public delegate void Void();
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public delegate IntPtr IntPtrFunc();

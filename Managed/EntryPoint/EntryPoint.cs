@@ -7,15 +7,18 @@ using ModLoader;
 public static class EntryPoint
 {
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
-    public static void Init(IntPtr logger)
+    public static void PreStart(IntPtr logger)
     {
        Core.PreStart(
            Marshal.GetDelegateForFunctionPointer<LoggerNative>(logger), 
            Log,
            MainPath
        );
-       //rn i will do it here
-       Core.Start();
+    }
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static void Start()
+    {
+        Core.Start();
     }
     private static readonly string MainPath = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location)!;
     static EntryPoint()
