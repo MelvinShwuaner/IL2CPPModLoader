@@ -6,8 +6,6 @@ NOTE: THE IL2CPP GENERATOR IS NOT INCLUDED. i will be working on a built-in gene
 ## PROGRESS:
 Host CORECLR and run EntryPoint: Complete
 
-Provide a interface for reflection and logging: In Progress
-
 run il2cppinterop: Complete
 
 load plugins: Ready, needs more work
