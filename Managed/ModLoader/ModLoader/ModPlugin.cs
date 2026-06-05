@@ -27,7 +27,7 @@ public abstract class ModPlugin
         }
         return plugins;
     }
-    public string Name { get; }
+    public abstract string Name { get; }
     public abstract void OnLoad();
     public string Path { get; internal set; }
 }

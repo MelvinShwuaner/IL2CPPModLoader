@@ -7,7 +7,7 @@ using ModLoader;
 public static class EntryPoint
 {
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
-    public static void Init(IntPtr _, IntPtr logger)
+    public static void Init(IntPtr logger)
     {
        Core.PreStart(
            Marshal.GetDelegateForFunctionPointer<LoggerNative>(logger), 

@@ -31,10 +31,8 @@ public class System
     public static void Start(string EntryPointPath, Logger Logger)
     {
         System.Logger = Logger;
-        var ptr = Marshal.StringToHGlobalAnsi(Application.dataPath);
         var log = Marshal.GetFunctionPointerForDelegate(Log);
-        GetMethod<VoidFromTwoIntPtr>(EntryPointPath, "EntryPoint", "Init")(ptr, log);
-        Marshal.FreeHGlobal(ptr);
+        GetMethod<VoidFromIntPtr>(EntryPointPath, "EntryPoint", "Init")(log);
         
         _getAssembly    = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "GetAssembly");
         _loadAssembly   = GetMethod<IntPtrFromIntPtr>   (EntryPointPath, "Reflection", "LoadAssembly");
