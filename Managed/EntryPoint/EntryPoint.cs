@@ -35,7 +35,7 @@ public static class EntryPoint
             var result = Check(MainPath, name.Name!, context);
             if (result != null)
                 return result;
-            Log("Failed to load " + name.Name + ".dll");
+            Log("Failed to load " + name.FullName);
             return null;
         };
     }
