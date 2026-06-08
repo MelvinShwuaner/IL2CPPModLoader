@@ -33,15 +33,18 @@ public class Utilities
 
         File.Delete(tempZip);
     }
-
     public static string InternalFilesDir
     {
         get
         {
-            using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            using var filesDir = activity.Call<AndroidJavaObject>("getFilesDir");
-            return Path.Combine(filesDir.Call<string>("getAbsolutePath"), "dotnet");
+#if UNITY_ANDROID && !UNITY_EDITOR
+        using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        using var activity    = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        using var filesDir    = activity.Call<AndroidJavaObject>("getFilesDir");
+        return filesDir.Call<string>("getAbsolutePath");
+#else
+            return Application.streamingAssetsPath;
+#endif
         }
     }
 }

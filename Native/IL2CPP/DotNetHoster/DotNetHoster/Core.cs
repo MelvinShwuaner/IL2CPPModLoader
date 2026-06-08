@@ -66,17 +66,24 @@ public class Core
 
     public static void PrepareDotNet(string ZipPath)
     {
+        #if UNITY_ANDROID
         Utilities.ExtractFromStreamingAssets(ZipPath, dotnetRoot);
+        #endif
     }
     /// <summary>
     /// loads the unity asset manager to be used by the mod loader
     /// </summary>
     public static void InitAssetManager()
     {
+        #if UNITY_ANDROID && !UNITY_EDITOR
         using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         using var activity    = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
         using var assets      = activity.Call<AndroidJavaObject>("getAssets");
-
         SetAssetManager(assets.GetRawObject());
+        #else
+        nint result = Marshal.StringToHGlobalAnsi(Application.dataPath);
+        SetAssetManager(result);
+        Marshal.FreeHGlobal(result);
+        #endif
     }
 }
