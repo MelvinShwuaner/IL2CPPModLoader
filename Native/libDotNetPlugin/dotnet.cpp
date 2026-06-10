@@ -5,7 +5,7 @@
 #include <objc/message.h>
 #include <sys/syslimits.h>
 #define MAX_PATH PATH_MAX
-#define LOG(...) NSLog(@__VA_ARGS__)
+#define LOG(...) printf(__VA_ARGS__)
 #define hostfxr "/libhostfxr.dylib"
 #elif defined(__ANDROID__)
 #include <android/log.h>

@@ -45,9 +45,12 @@ void* ReadAsset(const char* path, int* outSize)
 }
 #else
 #include <sys/syslimits.h>
+#include <cstring>
+#include <cstdio>
 #define MAX_PATH PATH_MAX
-#define LOG(...) NSLog(@__VA_ARGS__)
+#define LOG(...) printf(__VA_ARGS__)
 static char g_dataPath[PATH_MAX] = {};
+extern "C" {
 void SetAssetManager(const char* dataPath)
 {
     strncpy(g_dataPath, dataPath, PATH_MAX - 1);
@@ -55,7 +58,7 @@ void SetAssetManager(const char* dataPath)
 void* ReadAsset(const char* path, int* outSize)
 {
     char fullPath[PATH_MAX];
-    snprintf(fullPath, PATH_MAX, "%s/%s", g_dataPath, path);
+    std::snprintf(fullPath, PATH_MAX, "%s/%s", g_dataPath, path);
 
     FILE* f = fopen(fullPath, "rb");
     if (!f) { LOG("File not found: %s", fullPath); return nullptr; }
@@ -68,6 +71,7 @@ void* ReadAsset(const char* path, int* outSize)
     fread(buffer, 1, *outSize, f);
     fclose(f);
     return buffer;
+}
 }
 #endif
 extern "C"
