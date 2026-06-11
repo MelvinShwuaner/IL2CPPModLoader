@@ -8,16 +8,22 @@ namespace DotNet
 {
     public class Core
     {
-        [DllImport("DotNetPlugin")]
+        private const string Name =
+#if UNITY_ANDROID
+            "DotNetPlugin";
+#else
+            "__Internal";
+            #endif  
+        [DllImport(Name)]
         private static extern void SetAssetManager(IntPtr assetManager);
 
-        [DllImport("DotNetPlugin", EntryPoint = "IsHosting")]
+        [DllImport(Name, EntryPoint = "IsHosting")]
         private static extern int IsHostingInternal();
 
-        [DllImport("DotNetPlugin")]
+        [DllImport(Name)]
         private static extern int Host(string dotNetPath);
 
-        [DllImport("DotNetPlugin")]
+        [DllImport(Name)]
         private static extern int LoadMethod(string assemblyPath, string typeName, string methodName,
             out IntPtr outFunction);
 

@@ -16,6 +16,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
             XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED "NO"
             XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ""
             OSX_ARCHITECTURES "arm64"
+            FRAMEWORK TRUE
+            MACOSX_FRAMEWORK_IDENTIFIER com.yourcompany.dotnetplugin
+            VERSION 1.0.0
+            SOVERSION 1.0.0
     )
 
     target_link_libraries(DotNetPlugin

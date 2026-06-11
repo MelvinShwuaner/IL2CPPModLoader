@@ -1,0 +1,24 @@
+{
+    "name": "DotNet",
+    "rootNamespace": "",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [
+        "Editor",
+        "EmbeddedLinux",
+        "LinuxStandalone64",
+        "CloudRendering",
+        "macOSStandalone",
+        "macOSStandaloneServer",
+        "WSA",
+        "WindowsStandalone32",
+        "WindowsStandalone64"
+    ],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

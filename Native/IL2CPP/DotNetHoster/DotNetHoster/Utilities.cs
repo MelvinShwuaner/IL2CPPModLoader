@@ -14,8 +14,8 @@ namespace DotNet
             {
                 return;
             }
-
             string zipUrl = Path.Combine(Application.streamingAssetsPath, ZipPath);
+            #if UNITY_ANDROID
 
             using var req = UnityWebRequest.Get(zipUrl);
             var op = req.SendWebRequest();
@@ -34,6 +34,9 @@ namespace DotNet
             ZipFile.ExtractToDirectory(tempZip, Destination);
 
             File.Delete(tempZip);
+            #else
+            ZipFile.ExtractToDirectory(zipUrl, Destination);
+            #endif
         }
 
         public static string InternalFilesDir
