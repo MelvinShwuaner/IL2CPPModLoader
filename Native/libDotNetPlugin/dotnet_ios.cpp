@@ -1,5 +1,3 @@
-#import <Foundation/Foundation.h>
-#import <dispatch/dispatch.h>
 #import <dlfcn.h>
 #include <filesystem>
 #include "dotnet.cpp"

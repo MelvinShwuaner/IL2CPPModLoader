@@ -116,7 +116,7 @@ namespace
 {
     void *load_library(const char_t *path)
     {
-        void *h = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
+        void *h = dlopen(path, RTLD_NOW | RTLD_LOCAL);
         if (h == nullptr)
             LOG("dlopen failed for %s: %s", path, dlerror());
         return h;
