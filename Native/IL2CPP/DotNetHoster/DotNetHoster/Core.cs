@@ -26,6 +26,10 @@ namespace DotNet
         [DllImport(Name)]
         private static extern int LoadMethod(string assemblyPath, string typeName, string methodName,
             out IntPtr outFunction);
+        #if !UNITY_ANDROID
+        [DllImport("__Internal")]
+        private static extern int SetAppPaths(string Paths);
+        #endif
 
         /// <summary>
         /// is DotNet being hosted?
@@ -80,14 +84,28 @@ namespace DotNet
         }
 
         public static string dotnetRoot => Path.Combine(Utilities.InternalFilesDir, "dotnet");
-
-        public static void PrepareDotNet(string ZipPath)
+        #if UNITY_ANDROID
+        /// <summary>
+        /// provide the path to the zip file in streaming assets.
+        /// </summary>
+        public static void PrepareDotNet(string Path)
         {
-#if UNITY_ANDROID
-            Utilities.ExtractFromStreamingAssets(ZipPath, dotnetRoot);
-#endif
+            Utilities.ExtractFromStreamingAssets(Path, dotnetRoot);
         }
-
+        #else
+        /// <summary>
+        /// provide all paths to directories directly containing assemblies you want to load with GetMethod
+        /// </summary>
+        public static void PrepareDotNet(string[] Paths)
+        {
+            string Result = "";
+            foreach (var str in Paths)
+            {
+                Result += str + ":";
+            }
+            SetAppPaths(Result);
+        }
+        #endif
         /// <summary>
         /// loads the unity asset manager to be used by the mod loader
         /// </summary>

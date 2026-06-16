@@ -23,8 +23,6 @@ static unsigned int g_domainId = 0;
 static void CoreClrErrorWriter(const char *message) {
   LOG("[CoreCLR] %s", message ? message : "(null)");
 }
-
-
 static std::string BuildTpaList(fs::path dotnetRoot) {
     std::string tpaList = std::string();
 
@@ -35,7 +33,11 @@ static std::string BuildTpaList(fs::path dotnetRoot) {
     return tpaList;
 }
 coreclr_create_delegate_ptr createDelegate;
+static std::string AppPaths;
 extern "C" {
+void SetAppPaths(const char* paths) {
+    AppPaths = std::string(paths);
+}
 int LoadMethod(
         const char* AssemblyName,
         const char* TypeName,
@@ -50,8 +52,8 @@ int LoadMethod(
 int Host(const char* DotNetPath) {
   fs::path my_path = DotNetPath;
   fs::path executablePath = my_path.parent_path().parent_path();
-
-  void *coreclrHandle = dlopen(DotNetPath, RTLD_NOW | RTLD_LOCAL);
+  fs::path coreclr = my_path / "libcoreclr.dylib";
+  void *coreclrHandle = dlopen(coreclr.c_str(), RTLD_NOW | RTLD_LOCAL);
   if (!coreclrHandle) {
     LOG("[Mod][CoreCLR] dlopen failed: %s", dlerror());
     return 100;
@@ -78,14 +80,16 @@ int Host(const char* DotNetPath) {
   const std::string trustedAssemblies = BuildTpaList(my_path);
 
   const char *propertyKeys[] = {"TRUSTED_PLATFORM_ASSEMBLIES",
+                                "APP_PATHS",
                                 "NATIVE_DLL_SEARCH_DIRECTORIES"};
 
   const char *propertyValues[] = {trustedAssemblies.c_str(),
+                                  AppPaths.c_str(),
                                   DotNetPath };
 
   const char* exePath = executablePath.c_str();
   int initHr =
-      initialize(exePath, "DotNet", 2, propertyKeys,
+      initialize(exePath, "DotNet", 3, propertyKeys,
                  propertyValues, &g_hostHandle, &g_domainId);
 
   if (initHr < 0) {
