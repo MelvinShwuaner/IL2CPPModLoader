@@ -50,7 +50,7 @@ int LoadMethod(
 int Host(const char* DotNetPath) {
   fs::path my_path = DotNetPath;
   fs::path executablePath = my_path.parent_path().parent_path();
-  const fs::path coreclr = my_path / "libcoreclr.dylib";
+  fs::path coreclr = my_path / "libcoreclr.dylib";
   void *coreclrHandle = dlopen(coreclr.c_str(), RTLD_NOW | RTLD_LOCAL);
   if (!coreclrHandle) {
     LOG("[Mod][CoreCLR] dlopen failed: %s", dlerror());
