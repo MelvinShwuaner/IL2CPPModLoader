@@ -37,12 +37,12 @@ static std::string BuildTpaList(fs::path dotnetRoot) {
 coreclr_create_delegate_ptr createDelegate;
 extern "C" {
 int LoadMethod(
-        const char* AssemblyPath,
+        const char* AssemblyName,
         const char* TypeName,
         const char* MethodName,
         void** OutFunction) {
   int delegateHr =
-      createDelegate(g_hostHandle, g_domainId, AssemblyPath,
+      createDelegate(g_hostHandle, g_domainId, AssemblyName,
                      TypeName, MethodName,
                      OutFunction);
   return delegateHr;
@@ -54,7 +54,7 @@ int Host(const char* DotNetPath) {
   void *coreclrHandle = dlopen(DotNetPath, RTLD_NOW | RTLD_LOCAL);
   if (!coreclrHandle) {
     LOG("[Mod][CoreCLR] dlopen failed: %s", dlerror());
-    return -100;
+    return 100;
   }
 
   coreclr_initialize_ptr initialize =
@@ -68,7 +68,7 @@ int Host(const char* DotNetPath) {
 
   if (!initialize || !createDelegate) {
     LOG("[Mod][CoreCLR] Missing required CoreCLR exports");
-    return -10;
+    return 10;
   }
 
   if (setErrorWriter) {
@@ -89,8 +89,7 @@ int Host(const char* DotNetPath) {
                  propertyValues, &g_hostHandle, &g_domainId);
 
   if (initHr < 0) {
-    LOG("[Mod][CoreCLR] coreclr_initialize failed: 0x%08X", initHr);
-    return -1;
+    return initHr;
   }
 
   LOG("[Mod][CoreCLR] initialized (domain %u)", g_domainId);

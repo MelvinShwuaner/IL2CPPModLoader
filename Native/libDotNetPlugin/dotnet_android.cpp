@@ -92,13 +92,13 @@ extern "C"
         return EXIT_SUCCESS;
     }
     int LoadMethod(
-        const char* AssemblyPath,
+        const char* AssemblyName,
         const char* TypeName,
         const char* MethodName,
         void** OutFunction)
     {
         return load_assembly(
-            AssemblyPath,
+            AssemblyName,
             TypeName,
             MethodName,
             UNMANAGEDCALLERSONLY_METHOD,
