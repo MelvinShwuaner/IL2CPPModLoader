@@ -54,8 +54,9 @@ namespace DotNet
             }
         }
     }
-    public enum CoreClrLoadAssemblyError : int
+    public enum LoadAssemblyError : int
     {
+        #if UNITY_ANDROID
         // Win32 HRESULTs
         FileNotFound = unchecked((int)0x80070002),
         PathNotFound = unchecked((int)0x80070003),
@@ -76,9 +77,18 @@ namespace DotNet
         // Assembly binding errors
         AssemblyVersionMismatch = unchecked((int)0x80131040),
         AssemblyReferenceLoadFailure = unchecked((int)0x80131018),
+        #else
+        InvalidArgument = unchecked((int)0x80070057),
+        AssemblyNotFound = unchecked((int)0x80131522),
+        TypeNotFound = unchecked((int)0x80131510),
+        MethodNotFound = unchecked((int)0x80131511),
+        SignatureMismatch = unchecked((int)0x80131515),
+        UnspecifiedFailure = unchecked((int)0x80004005),
+        #endif
     }
-    public enum HostResult : int
+    public enum HostError : int
     {
+        #if UNITY_ANDROID
         FailedToLoadHostFxr = -100,
 
 
@@ -121,5 +131,15 @@ namespace DotNet
 
         HostIncompatibleConfig = unchecked((int)0x800080A0),
         HostApiFailed = unchecked((int)0x800080A1),
+        #else
+        DlopenFailed = 100,
+        MissingExports = 10,
+    
+        // coreclr_initialize HRESULTs
+        InvalidArgument = unchecked((int)0x80070057),
+        GenericRuntimeError = unchecked((int)0x80131500),
+        UnspecifiedFailure = unchecked((int)0x80004005),
+        OutOfMemory = unchecked((int)0x8007000E),
+        #endif
     }
 }

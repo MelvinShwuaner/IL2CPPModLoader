@@ -46,7 +46,7 @@ namespace DotNet
             int result = Host(dotnetRoot);
             if (result != 0)
             {
-                throw new InvalidOperationException($"Failed to Host DotNet! due to {(HostResult)result}");
+                throw new InvalidOperationException($"Failed to Host DotNet! due to {(HostError)result}");
             }
         }
 
@@ -65,12 +65,15 @@ namespace DotNet
             {
                 throw new NotSupportedException("DotNet is not running!");
             }
-
             string DllName = Path.GetFileNameWithoutExtension(AssemblyPath);
+            #if UNITY_ANDROID
             int result = LoadMethod(AssemblyPath, TypeName + ", " + DllName, MethodName, out var fnPtr);
+            #else
+            int result = LoadMethod(DllName, TypeName, MethodName, out var fnPtr);
+            #endif
             if (result != 0)
             {
-                throw new InvalidOperationException($"failed to load the method {DllName}::{TypeName}::{MethodName} because of {(CoreClrLoadAssemblyError)result}");
+                throw new InvalidOperationException($"failed to load the method {DllName}::{TypeName}::{MethodName} because of {(LoadAssemblyError)result}");
             }
 
             return Marshal.GetDelegateForFunctionPointer<T>(fnPtr);
