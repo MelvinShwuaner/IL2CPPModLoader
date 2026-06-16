@@ -26,10 +26,6 @@ namespace DotNet
         [DllImport(Name)]
         private static extern int LoadMethod(string assemblyPath, string typeName, string methodName,
             out IntPtr outFunction);
-        #if !UNITY_ANDROID
-        [DllImport("__Internal")]
-        private static extern int SetAppPaths(string Paths);
-        #endif
 
         /// <summary>
         /// is DotNet being hosted?
@@ -93,6 +89,8 @@ namespace DotNet
             Utilities.ExtractFromStreamingAssets(Path, dotnetRoot);
         }
         #else
+        [DllImport("__Internal")]
+        private static extern int SetAppPaths(string Paths);
         /// <summary>
         /// provide all paths to directories directly containing assemblies you want to load with GetMethod
         /// </summary>
