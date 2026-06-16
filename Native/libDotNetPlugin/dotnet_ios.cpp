@@ -59,12 +59,12 @@ int Host(const char* DotNetPath) {
     return 100;
   }
 
-  coreclr_initialize_ptr initialize =
+  auto initialize =
       (coreclr_initialize_ptr)dlsym(coreclrHandle, "coreclr_initialize");
   createDelegate =
       (coreclr_create_delegate_ptr)dlsym(coreclrHandle,
                                          "coreclr_create_delegate");
-  coreclr_set_error_writer_ptr setErrorWriter =
+  auto setErrorWriter =
       (coreclr_set_error_writer_ptr)dlsym(coreclrHandle,
                                           "coreclr_set_error_writer");
 
