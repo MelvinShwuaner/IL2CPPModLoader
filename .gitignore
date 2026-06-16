@@ -8,3 +8,7 @@ Native/.DS_Store
 /Managed/publish
 /Managed/EntryPoint/obj
 /Native/libDotNetPlugin/.idea
+/Managed/.idea
+/Managed/EntryPoint/.idea
+/Native/IL2CPP/DotNetHoster/.idea
+/Native/.idea
