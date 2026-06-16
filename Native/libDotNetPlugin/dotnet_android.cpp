@@ -1,23 +1,53 @@
 #include <android/log.h>
 #define LOG(...) __android_log_print(ANDROID_LOG_ERROR, "DotNetPlugin", __VA_ARGS__)
-#define MAX_PATH PATH_MAX
-#define hostfxr "/libhostfxr.so"
-#include <assert.h>
 #include <chrono>
 #include <iostream>
-#include "coreclr_delegates.h"
-#include "hostfxr.h"
 #include <dlfcn.h>
 #define STR(s) s
 #define CH(c) c
 #define string_compare strcmp
-#include "shared.cpp"
+#include "dotnet.cpp"
+#define HOSTFXR_CALLTYPE
+#define CORECLR_DELEGATE_CALLTYPE
+typedef char char_t;
+#define UNMANAGEDCALLERSONLY_METHOD ((const char_t*)-1)
+typedef void* hostfxr_handle;
+enum hostfxr_delegate_type
+{
+    hdt_com_activation,
+    hdt_load_in_memory_assembly,
+    hdt_winrt_activation,
+    hdt_com_register,
+    hdt_com_unregister,
+    hdt_load_assembly_and_get_function_pointer,
+    hdt_get_function_pointer,
+    hdt_load_assembly,
+    hdt_load_assembly_bytes,
+};
+typedef int (CORECLR_DELEGATE_CALLTYPE *load_assembly_and_get_function_pointer_fn)(
+    const char_t *assembly_path      /* Fully qualified path to assembly */,
+    const char_t *type_name          /* Assembly qualified type name */,
+    const char_t *method_name        /* Public static method name compatible with delegateType */,
+    const char_t *delegate_type_name /* Assembly qualified delegate type name or null
+                                        or UNMANAGEDCALLERSONLY_METHOD if the method is marked with
+                                        the UnmanagedCallersOnlyAttribute. */,
+    void         *reserved           /* Extensibility parameter (currently unused and must be 0) */,
+    /*out*/ void **delegate          /* Pointer where to store the function pointer result */);
 namespace
 {
+    typedef int32_t(HOSTFXR_CALLTYPE *hostfxr_initialize_for_runtime_config_fn)(
+    const char_t *runtime_config_path,
+    const struct hostfxr_initialize_parameters *parameters,
+    /*out*/ hostfxr_handle *host_context_handle);
+
+    typedef int32_t(HOSTFXR_CALLTYPE *hostfxr_get_runtime_delegate_fn)(
+    const hostfxr_handle host_context_handle,
+    enum hostfxr_delegate_type type,
+    /*out*/ void **delegate);
+
     // Globals to hold hostfxr exports
     hostfxr_initialize_for_runtime_config_fn init_for_config_fptr;
     hostfxr_get_runtime_delegate_fn get_delegate_fptr;
-    hostfxr_close_fn close_fptr;
 
     // Forward declarations
     bool load_hostfxr(const char_t *app);
@@ -84,10 +114,6 @@ extern "C"
  ********************************************************************************************/
 namespace
 {
-    // Forward declarations
-    void *load_library(const char_t *);
-    void *get_export(void *, const char *);
-
     void *load_library(const char_t *path)
     {
         void *h = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
@@ -107,7 +133,7 @@ namespace
     // Using the nethost library, discover the location of hostfxr and get exports
     bool load_hostfxr(const char_t* dotnet_root)
     {
-        std::string str = std::string(dotnet_root) + hostfxr;
+        std::string str = std::string(dotnet_root) + "/libhostfxr.so";
 
         // Load hostfxr and get desired exports
         // NOTE: The .NET Runtime does not support unloading any of its native libraries. Running
@@ -115,9 +141,8 @@ namespace
         void *lib = load_library(str.c_str());
         init_for_config_fptr = (hostfxr_initialize_for_runtime_config_fn)get_export(lib, "hostfxr_initialize_for_runtime_config");
         get_delegate_fptr = (hostfxr_get_runtime_delegate_fn)get_export(lib, "hostfxr_get_runtime_delegate");
-        close_fptr = (hostfxr_close_fn)get_export(lib, "hostfxr_close");
 
-        return (init_for_config_fptr && get_delegate_fptr && close_fptr);
+        return (init_for_config_fptr && get_delegate_fptr);
     }
     // </SnippetLoadHostFxr>
 

@@ -1,6 +1,9 @@
 #import <Foundation/Foundation.h>
 #import <dispatch/dispatch.h>
 #import <dlfcn.h>
+#include <filesystem>
+#include "dotnet.cpp"
+namespace fs = std::filesystem;
 #define LOG(...) printf(__VA_ARGS__)
 typedef int (*coreclr_initialize_ptr)(
     const char *exePath, const char *appDomainFriendlyName, int propertyCount,
@@ -14,52 +17,22 @@ typedef int (*coreclr_create_delegate_ptr)(
 typedef void (*coreclr_set_error_writer_ptr)(void (*)(const char *));
 
 // BepInEx entry point delegate type
-typedef void (*bepinex_start_delegate)(void);
 
 static void *g_hostHandle = NULL;
 static unsigned int g_domainId = 0;
-static bepinex_start_delegate g_chainloaderDelegate = NULL;
-static bool g_chainloaderCalled = false;
-
 static void CoreClrErrorWriter(const char *message) {
-  LOG("[Mod][CoreCLR] %s", message ? message : "(null)");
+  LOG("[CoreCLR] %s", message ? message : "(null)");
 }
 
 
-static const char* BuildTpaList(const char* coreClrRoot,
-                              const char* managedAssemblyPath) {
-  NSMutableArray<NSString *> *tpaEntries =
-      [NSMutableArray arrayWithObject:managedAssemblyPath];
-  NSFileManager *fileManager = [NSFileManager defaultManager];
+static std::string BuildTpaList(fs::path dotnetRoot) {
+    std::string tpaList = std::string();
 
-  // Add BCL assemblies from CoreCLR
-  NSString *bclPath = [coreClrRoot stringByAppendingPathComponent:@"net10.0"];
-  NSArray<NSString *> *bclFiles = [fileManager contentsOfDirectoryAtPath:bclPath
-                                                                   error:nil];
-  for (NSString *file in bclFiles) {
-    if ([file hasSuffix:@".dll"]) {
-      [tpaEntries addObject:[bclPath stringByAppendingPathComponent:file]];
+    fs::path dlls = dotnetRoot / "net10.0";
+    for (const auto& entry : fs::directory_iterator(dlls)) {
+        tpaList.append(fs::absolute(entry.path()).string() + ";");
     }
-  }
-
-  // Add BepInEx core assemblies to TPA
-  NSString *bepinexCorePath = ResolveBepInExCorePath();
-  if (bepinexCorePath) {
-    NSArray<NSString *> *coreFiles =
-        [fileManager contentsOfDirectoryAtPath:bepinexCorePath error:nil];
-    for (NSString *file in coreFiles) {
-      if ([file hasSuffix:@".dll"]) {
-        NSString *fullPath =
-            [bepinexCorePath stringByAppendingPathComponent:file];
-        // Avoid duplicates
-        if (![tpaEntries containsObject:fullPath]) {
-          [tpaEntries addObject:fullPath];
-        }
-      }
-    }
-  }
-
-  return [tpaEntries componentsJoinedByString:@":"];
+    return tpaList;
 }
 coreclr_create_delegate_ptr createDelegate;
 extern "C" {
@@ -68,10 +41,15 @@ int LoadMethod(
         const char* TypeName,
         const char* MethodName,
         void** OutFunction) {
-
-}
+  int delegateHr =
+      createDelegate(g_hostHandle, g_domainId, AssemblyPath,
+                     TypeName, MethodName,
+                     OutFunction);
+  return delegateHr;
 }
 int Host(const char* DotNetPath) {
+  fs::path my_path = DotNetPath;
+  fs::path executablePath = my_path.parent_path().parent_path();
 
   void *coreclrHandle = dlopen(DotNetPath, RTLD_NOW | RTLD_LOCAL);
   if (!coreclrHandle) {
@@ -97,44 +75,17 @@ int Host(const char* DotNetPath) {
     setErrorWriter(CoreClrErrorWriter);
   }
 
-  const char* trustedAssemblies = BuildTpaList(coreClrRoot, managedAssemblyPath);
+  const std::string trustedAssemblies = BuildTpaList(my_path);
 
-  // Build native search paths including BepInEx core directory
-  NSMutableArray<NSString *> *nativeSearchPathsArr = [NSMutableArray array];
-  [nativeSearchPathsArr addObject:coreClrRoot];
-  [nativeSearchPathsArr
-      addObject:[[[NSBundle mainBundle] bundlePath]
-                    stringByAppendingPathComponent:@"Frameworks"]];
-
-  NSString *bepinexCorePath = ResolveBepInExCorePath();
-  if (bepinexCorePath) {
-    [nativeSearchPathsArr addObject:bepinexCorePath];
-  }
-
-  const char* nativeSearchPaths =
-      [nativeSearchPathsArr componentsJoinedByString:@":"];
-
-  // Build APP_PATHS to include BepInEx core
-  NSMutableArray<NSString *> *appPathsArr = [NSMutableArray array];
-  [appPathsArr addObject:coreClrRoot];
-  if (bepinexCorePath) {
-    [appPathsArr addObject:bepinexCorePath];
-  }
-  const char* appPaths = [appPathsArr componentsJoinedByString:@":"];
-
-  const char *propertyKeys[] = {"TRUSTED_PLATFORM_ASSEMBLIES", "APP_PATHS",
-                                "APP_NI_PATHS",
+  const char *propertyKeys[] = {"TRUSTED_PLATFORM_ASSEMBLIES",
                                 "NATIVE_DLL_SEARCH_DIRECTORIES"};
 
-  const char *propertyValues[] = {trustedAssemblies,
-                                  appPaths,
-                                  appPaths,
-                                  nativeSearchPaths };
+  const char *propertyValues[] = {trustedAssemblies.c_str(),
+                                  DotNetPath };
 
-  const char* exePath = [[[NSBundle mainBundle] executablePath]
-      stringByDeletingLastPathComponent];
+  const char* exePath = executablePath.c_str();
   int initHr =
-      initialize(exePath, "DotNet", 4, propertyKeys,
+      initialize(exePath, "DotNet", 2, propertyKeys,
                  propertyValues, &g_hostHandle, &g_domainId);
 
   if (initHr < 0) {
@@ -143,39 +94,7 @@ int Host(const char* DotNetPath) {
   }
 
   LOG("[Mod][CoreCLR] initialized (domain %u)", g_domainId);
-
-  // Call BepInEx entry point via coreclr_create_delegate
-  LOG("[Mod][CoreCLR] Loading BepInEx entry point...");
-
-  bepinex_start_delegate startDelegate = NULL;
-  int delegateHr =
-      createDelegate(g_hostHandle, g_domainId, "BepInEx.Unity.IL2CPP",
-                     "BepInEx.Unity.IL2CPP.StarlightEntrypoint", "StartIOS",
-                     (void **)&startDelegate);
-
-  if (delegateHr < 0 || !startDelegate) {
-    LOG("[Mod][CoreCLR] coreclr_create_delegate failed: 0x%08X", delegateHr);
-    LOG("[Mod][CoreCLR] Make sure BepInEx.Unity.IL2CPP.dll is in "
-          @"Documents/BepInEx/core/");
-    return;
-  }
-
-  LOG("[Mod][CoreCLR] Calling StarlightEntrypoint.StartIOS()");
-  startDelegate();
-  LOG("[Mod][CoreCLR] BepInEx preloader started");
-
-  // Get chainloader delegate but DON'T call it yet
-  // It will be called when Internal_ActiveSceneChanged is invoked
-  int chainloaderHr =
-      createDelegate(g_hostHandle, g_domainId, "BepInEx.Unity.IL2CPP",
-                     "BepInEx.Unity.IL2CPP.StarlightEntrypoint", "StartChainloader",
-                     (void **)&g_chainloaderDelegate);
-
-  if (chainloaderHr < 0 || !g_chainloaderDelegate) {
-    LOG("[Mod][CoreCLR] Failed to get StartChainloader delegate: 0x%08X", chainloaderHr);
-    return;
-  }
-
-  LOG("[Mod][CoreCLR] Chainloader delegate ready, waiting for scene load...");
+  Hosted = true;
+  return 0;
 }
 }

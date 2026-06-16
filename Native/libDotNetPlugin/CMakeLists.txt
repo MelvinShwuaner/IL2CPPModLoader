@@ -5,13 +5,11 @@ if(ANDROID)
     add_library(DotNetPlugin SHARED
             dotnet_android.cpp
             assetmanager.cpp
-            shared.cpp
     )
 else ()
     add_library(DotNetPlugin SHARED
             dotnet_ios.cpp
             assetmanager.cpp
-            shared.cpp
     )
 endif ()
 
