@@ -43,11 +43,10 @@ namespace DotNet
             {
                 throw new NotSupportedException("DotNet is already running");
             }
-
             int result = Host(dotnetRoot);
             if (result != 0)
             {
-                throw new InvalidOperationException("Failed to Host DotNet!");
+                throw new InvalidOperationException($"Failed to Host DotNet! due to {(HostResult)result}");
             }
         }
 
@@ -58,7 +57,6 @@ namespace DotNet
         /// <param name="TypeName">the Type Name. "namespace.class"</param>
         /// <param name="MethodName">the name of the method</param>
         /// <typeparam name="T">the delegate type. must be a UnManagedCallersOnly method</typeparam>
-        /// <returns></returns>
         /// <exception cref="NotSupportedException">DotNet is not being hosted</exception>
         /// <exception cref="MissingMemberException">the method, dll, or class was failed to be found</exception>
         public static T GetMethod<T>(string AssemblyPath, string TypeName, string MethodName) where T : Delegate
@@ -69,9 +67,10 @@ namespace DotNet
             }
 
             string DllName = Path.GetFileNameWithoutExtension(AssemblyPath);
-            if (LoadMethod(AssemblyPath, TypeName + ", " + DllName, MethodName, out var fnPtr) != 0)
+            int result = LoadMethod(AssemblyPath, TypeName + ", " + DllName, MethodName, out var fnPtr);
+            if (result != 0)
             {
-                throw new MissingMemberException($"{AssemblyPath}::{TypeName}::{MethodName} was not found!");
+                throw new InvalidOperationException($"failed to load the method {DllName}::{TypeName}::{MethodName} because of {(CoreClrLoadAssemblyError)result}");
             }
 
             return Marshal.GetDelegateForFunctionPointer<T>(fnPtr);
@@ -91,7 +90,7 @@ namespace DotNet
         /// </summary>
         public static void InitAssetManager()
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID
         using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
         using var assets = activity.Call<AndroidJavaObject>("getAssets");

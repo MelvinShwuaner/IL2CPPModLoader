@@ -17,7 +17,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
             XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ""
             OSX_ARCHITECTURES "arm64"
             FRAMEWORK TRUE
-            MACOSX_FRAMEWORK_IDENTIFIER com.yourcompany.dotnetplugin
+            MACOSX_FRAMEWORK_IDENTIFIER com.melvin.shwuaner
             VERSION 1.0.0
             SOVERSION 1.0.0
     )

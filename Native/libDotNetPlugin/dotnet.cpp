@@ -32,7 +32,7 @@ namespace
 
     // Forward declarations
     bool load_hostfxr(const char_t *app);
-    load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly();
+    int get_dotnet_load_assembly(void** load_assembly_and_get_function_pointer);
 }
 static bool Hosted = false;
 static const char* RuntimeConfigPath;
@@ -47,7 +47,7 @@ extern "C"
         if (!load_hostfxr(DotNetPath))
         {
             LOG("Failed to load hostfxr");
-            return EXIT_FAILURE;
+            return -100;
         }
         static std::string RuntimeConfigPathStr;
 
@@ -61,14 +61,14 @@ extern "C"
         if (rc != 0 || Context == nullptr)
         {
             LOG("hostfxr_initialize_for_runtime_config failed: 0x%x", rc);
-            return EXIT_FAILURE;
+            return rc;
         }
-        load_assembly = get_dotnet_load_assembly();
+        rc = get_dotnet_load_assembly(reinterpret_cast<void**>(&load_assembly));
 
-        if (load_assembly == nullptr)
+        if (rc != 0)
         {
             LOG("Failed to get load_assembly delegate");
-            return EXIT_FAILURE;
+            return rc;
         }
         Hosted = true;
         return EXIT_SUCCESS;
@@ -79,7 +79,7 @@ extern "C"
         const char* MethodName,
         void** OutFunction)
     {
-        int rc = load_assembly(
+        return load_assembly(
             AssemblyPath,
             TypeName,
             MethodName,
@@ -87,13 +87,6 @@ extern "C"
             nullptr,
             OutFunction
         );
-
-        if (rc != 0 || *OutFunction == nullptr)
-        {
-            LOG("Failed to get function: 0x%x", rc);
-            return EXIT_FAILURE;
-        }
-        return EXIT_SUCCESS;
     }
     int IsHosting() {
         return Hosted;
@@ -145,19 +138,16 @@ namespace
 
     // <SnippetInitialize>
     // Load and initialize .NET Core and get desired function pointer for scenario
-    load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly()
+    int get_dotnet_load_assembly(void** load_assembly_and_get_function_pointer)
     {
         // Load .NET Core
-        void *load_assembly_and_get_function_pointer = nullptr;
+        *load_assembly_and_get_function_pointer = nullptr;
         // Get the load assembly function pointer
         int rc = get_delegate_fptr(
             Context,
             hdt_load_assembly_and_get_function_pointer,
-            &load_assembly_and_get_function_pointer);
-        if (rc != 0 || load_assembly_and_get_function_pointer == nullptr)
-            std::cerr << "Get delegate failed: " << std::hex << std::showbase << rc << std::endl;
-
-        return (load_assembly_and_get_function_pointer_fn)load_assembly_and_get_function_pointer;
+            load_assembly_and_get_function_pointer);
+        return rc;
     }
     // </SnippetInitialize>
 }

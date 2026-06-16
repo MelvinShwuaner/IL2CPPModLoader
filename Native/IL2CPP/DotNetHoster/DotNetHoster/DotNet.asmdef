@@ -4,12 +4,10 @@
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [
-        "Editor",
         "EmbeddedLinux",
         "LinuxStandalone64",
         "CloudRendering",
         "macOSStandalone",
-        "macOSStandaloneServer",
         "WSA",
         "WindowsStandalone32",
         "WindowsStandalone64"
