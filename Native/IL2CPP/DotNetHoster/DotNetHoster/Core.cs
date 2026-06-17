@@ -53,12 +53,13 @@ namespace DotNet
         /// <summary>
         /// loads an assembly and returns a function pointer
         /// </summary>
+        /// <remarks>if you are on ios, remember to provide the path to the directory of this assembly in PrepareDotNet BEFORE hosting!</remarks>
         /// <param name="AssemblyPath">the full path to the DLL</param>
         /// <param name="TypeName">the Type Name. "namespace.class"</param>
         /// <param name="MethodName">the name of the method</param>
         /// <typeparam name="T">the delegate type. must be a UnManagedCallersOnly method</typeparam>
         /// <exception cref="NotSupportedException">DotNet is not being hosted</exception>
-        /// <exception cref="MissingMemberException">the method, dll, or class was failed to be found</exception>
+        /// <exception cref="InvalidOperationException">the method, dll, or class was failed to be found or an exception happened</exception>
         public static T GetMethod<T>(string AssemblyPath, string TypeName, string MethodName) where T : Delegate
         {
             if (!IsHosting)

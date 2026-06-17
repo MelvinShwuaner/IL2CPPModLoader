@@ -15,7 +15,7 @@ namespace DotNet
     public delegate void Logger(string msg, MsgType Type);
     
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    delegate void log(IntPtr msg, int Type);
+    internal delegate void log(IntPtr msg, int Type);
     /// <summary>
     /// this class utilizes the Entry Point dll
     /// </summary>
