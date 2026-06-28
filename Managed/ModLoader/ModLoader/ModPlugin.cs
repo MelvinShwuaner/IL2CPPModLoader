@@ -3,7 +3,7 @@ using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
 
 namespace ModLoader;
-public abstract class ModPlugin
+public abstract class ModPlugin : BaseMod
 {
     internal static List<ModPlugin> LoadFrom(string Path)
     {
@@ -12,6 +12,10 @@ public abstract class ModPlugin
         {
             var assembly = Assembly.LoadFrom(Path);
             RegisterTypeInIl2Cpp.RegisterAssembly(assembly);
+            foreach (var Module in Core.Modules.Values)
+            {
+                plugins.AddRange(Module.LoadPlugin(assembly));
+            }
             foreach (var type in AccessTools.GetTypesFromAssembly(assembly))
             {
                 if (typeof(ModPlugin).IsAssignableFrom(type) && !type.IsAbstract && type.GetConstructor(Type.EmptyTypes) != null)
@@ -27,9 +31,6 @@ public abstract class ModPlugin
         }
         return plugins;
     }
-    public abstract string Name { get; }
-    public abstract void OnLoad();
-    public string Path { get; internal set; }
 }
 [AttributeUsage(AttributeTargets.Class)]
 public class RegisterTypeInIl2Cpp(params Type[] interfaces) : Attribute

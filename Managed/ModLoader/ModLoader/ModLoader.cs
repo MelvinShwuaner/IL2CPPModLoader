@@ -12,16 +12,16 @@ public class Core
 {
     public static UnityVersion UnityVersion { get; private set; }
     internal static Dictionary<string, ModPlugin> Plugins = new  Dictionary<string, ModPlugin>();
+    internal static Dictionary<string, Module> Modules = new  Dictionary<string, Module>();
+    
     internal static void PreStart(LoggerNative logger, Action<string> LoggerManaged, string MainPath)
     {
         Logger.native = logger;
         Logger.managed = LoggerManaged;
         Enviornment.MainPath =  MainPath;
+        
         Logger.Msg("DotNet: Initializing");
-        
         UnityVersion = GetVersion();
-        Logger.Msg("UnityVersion: " + UnityVersion);
-        
         Il2CppInteropRuntime.Create(new RuntimeConfiguration
             {
                 UnityVersion = new Version(UnityVersion.Major, UnityVersion.Minor, UnityVersion.Build),
@@ -30,6 +30,16 @@ public class Core
             .AddLogger(Logger.Instance)
             .AddHarmonySupport()
             .Start();
+        
+        if (!Directory.Exists(Enviornment.ModulesPath))
+        {
+            Directory.CreateDirectory(Enviornment.ModulesPath);
+            return;
+        }
+        foreach (var File in Directory.GetFiles(Enviornment.ModulesPath).Where(s => s.EndsWith(".dll")))
+        {
+            LoadModule(File);
+        }
     }
     internal static void Start()
     {
@@ -66,6 +76,33 @@ public class Core
                 catch (Exception e)
                 {
                     Logger.Error($"Failed to load plugin {Plugin.Name}: {e.Message}");
+                }
+            }
+        }
+    }
+    private static void LoadModule(string Path)
+    {
+        var modules = Module.LoadFrom(Path);
+        if (modules.Count == 0)
+        {
+            throw new MissingMemberException($"No Modules found in {Path}");
+        }
+        foreach (var Module in modules)
+        {
+            if (!Modules.TryAdd(Module.Name, Module))
+            {
+                Logger.Msg($"module name conflict: {Module.Name} between {Path} and {Plugins[Module.Name].Path}");
+            }
+            else
+            {
+                Module.Path = Path;
+                try
+                {
+                    Module.OnLoad();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"Failed to load plugin {Module.Name}: {e.Message}");
                 }
             }
         }

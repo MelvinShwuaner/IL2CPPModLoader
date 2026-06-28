@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntryPoint", "EntryPoint\En
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModLoader", "ModLoader\ModLoader.csproj", "{5B68C5F3-140F-496B-B765-6C2FAE10CF0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldBoxCompatibilityModule", "WorldBoxCompatibilityModule\WorldBoxCompatibilityModule.csproj", "{15BDC9A5-3282-4E83-A466-2E9AA673155D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{5B68C5F3-140F-496B-B765-6C2FAE10CF0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B68C5F3-140F-496B-B765-6C2FAE10CF0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B68C5F3-140F-496B-B765-6C2FAE10CF0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15BDC9A5-3282-4E83-A466-2E9AA673155D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15BDC9A5-3282-4E83-A466-2E9AA673155D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15BDC9A5-3282-4E83-A466-2E9AA673155D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15BDC9A5-3282-4E83-A466-2E9AA673155D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
